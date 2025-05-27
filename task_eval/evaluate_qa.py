@@ -12,6 +12,7 @@ from task_eval.gpt_utils import get_gpt_answers
 from task_eval.claude_utils import get_claude_answers
 from task_eval.gemini_utils import get_gemini_answers
 from task_eval.hf_llm_utils import init_hf_model, get_hf_answers
+from task_eval.honcho_utils import get_honcho_answers
 
 import numpy as np
 import google.generativeai as genai
@@ -46,11 +47,11 @@ def main():
         set_openai_key()
 
     elif 'claude' in args.model:
-        # set openai API key
+        # set anthropic API key
         set_anthropic_key()
 
     elif 'gemini' in args.model:
-        # set openai API key
+        # set gemini API key
         set_gemini_key()
         if args.model == "gemini-pro-1.0":
             model_name = "models/gemini-1.0-pro-latest"
@@ -59,6 +60,10 @@ def main():
     
     elif any([model_name in args.model for model_name in ['gemma', 'llama', 'mistral']]):
         hf_pipeline, hf_model_name = init_hf_model(args)
+    
+    elif args.model == 'honcho':
+        # Honcho uses its own API key from environment
+        print("Using Honcho for evaluation")
 
     else:
         raise NotImplementedError
@@ -92,6 +97,8 @@ def main():
             answers = get_gemini_answers(gemini_model, data, out_data, prediction_key, args)
         elif any([model_name in args.model for model_name in ['gemma', 'llama', 'mistral']]):
             answers = get_hf_answers(data, out_data, args, hf_pipeline, hf_model_name)
+        elif args.model == 'honcho':
+            answers = get_honcho_answers(data, out_data, prediction_key, args)
         else:
             raise NotImplementedError
 

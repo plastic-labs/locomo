@@ -1,0 +1,108 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Context Rules
+Project URL on Linear: https://linear.app/plastic-labs/project/memory-evals-2871c6f40dbf
+
+
+## Linear Project Context
+- Before responding to any user query, read the "Memory Evals" project description from Linear via MCP
+- Familiarize yourself with the goal and implementation plan.
+
+## Linear Issues Context
+- Fetch all issues related to the project
+- Identify:
+  - Completed tasks (Done)
+  - In-progress work (In Progress)
+  - Upcoming tasks (Backlog / To Do / Triage)
+
+## Response Framing
+- When responding to the user's code or implementation questions, frame all responses in the context provided by the requests above.
+- Provide code suggestions that align with the current implementation phase
+
+
+## Writing to Linear
+- Whenever you write updates to Linear, do not write anything that has not been confirmed as fact with the user.
+- When creating new issues, always 
+    - Assign them to the user whose API key you are using (probably danibalcells)
+    - Add them to the Memory Evals project
+    - Set them to priority 2 (High) unless otherwise specified.
+    - Set them to workflow state Triage (see below)
+- Always begin any text you add to Linear (project content, issue descriptions, comments) with "Cursor via MCP:\n"
+- You can create sub-issues of an issue by including the parent issue ID in the parentId field when creating an issue.
+- Workflow states are listed below:
+[
+  {
+    "id": "1beef15b-932e-4cd7-93cd-1eb0af79b784",
+    "name": "Triage",
+    "type": "triage",
+    "description": "Issue needs to be triaged"
+  },
+  {
+    "id": "a1704c27-f182-4be7-a6cf-0a51c7218960",
+    "name": "In Review",
+    "type": "started",
+    "description": "Pull request is being reviewed"
+  },
+  {
+    "id": "f9a63a74-c87d-476a-94cc-e2c15e837021",
+    "name": "Canceled",
+    "type": "canceled",
+    "description": ""
+  },
+  {
+    "id": "6ddd617a-e8ef-42f5-a939-f3d17a1d3207",
+    "name": "Done",
+    "type": "completed",
+    "description": ""
+  },
+  {
+    "id": "5dc02d0a-c9d3-40bb-b09b-3e1cc89c572a",
+    "name": "In Progress",
+    "type": "started",
+    "description": ""
+  },
+  {
+    "id": "40e48cf9-6d87-47a2-881e-7362a60f1dbe",
+    "name": "Todo",
+    "type": "unstarted",
+    "description": ""
+  },
+  {
+    "id": "2fa4bec7-1073-4840-a98d-30fef58f7eca",
+    "name": "Duplicate",
+    "type": "canceled",
+    "description": ""
+  },
+  {
+    "id": "2e37687b-a0d7-4736-aa9a-618c0e157db7",
+    "name": "Backlog",
+    "type": "backlog",
+    "description": ""
+  }
+]
+
+# Git
+- Write short commit messages that describe the high-level goal the commit achieves rather than describing individual changes.
+
+# Terminal use
+When running terminal commands, append "2>&1 | cat" to the end of your command to ensure the terminal can exit correctly and we're not stuck waiting.
+
+# Coding Style and Approach
+- This is a research project. Simple and readable code is preferred over complex, highly modular code. We don't need to worry about potential scalability or maintainability issues as much as we would with a production application.
+- Stick to the task at hand. Avoid scope creep e.g. creating entire new modules or complex workflows. Do not overengineer solutions.
+- When adding error handling, keep it simple and minimal. Avoid complicating the code for the purposes of error handling. However, specific tasks e.g. adding fault tolerance or resilience to the code, might be reasonable exceptions to this rule.
+
+# Chat Instructions
+- At the beginning of every conversation:
+    - Read the project description from Linear to get context (getProjects)
+    - Get a list of issues marked as part of the project.
+    - Read description and comments of issues marked as "In Progress"
+- Use the following process for every message:
+    - *Explore* by looking at relevant sources. This might involve, depending on the situation, source files, additional references, Linear issues and projects, or searching the web. Do not write any code just yet.
+    - *Plan* your approach to solving the specific task or problem presented by the user. Think about how you will solve it with the information available to you. Think hard about whether your proposed plan seems reasonable. Think hard about whether your solution is overengineered, or creeping the scope beyond the user's request. If it seems like a reasonable plan, and if you have been provided with a Linear issue for the task at hand, update it by adding a comment with your current plan.
+    - *Implement* your solution in code. As you do so, think again to verify whether the solution is reasonable.
+    - Only *commit* if explicitly asked to do so by the user.
+    - If the user writes "DWCY" it means "Don't Write Code Yet". This indicates that you should only Explore and Plan, and discuss your proposed solution or findings with the user, but wait to Implement until the user has confirmed.
