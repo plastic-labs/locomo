@@ -20,11 +20,12 @@ Project URL on Linear: https://linear.app/plastic-labs/project/memory-evals-2871
 
 ## Response Framing
 - When responding to the user's code or implementation questions, frame all responses in the context provided by the requests above.
-- Provide code suggestions that align with the current implementation phase
+- When providing code suggestions, make sure that they align with the current implementation phase
 
 
 ## Writing to Linear
 - Whenever you write updates to Linear, do not write anything that has not been confirmed as fact with the user.
+- Err on the side of caution and modesty, and do not overpromise. Do not write that tasks are "complete", change their status, or give the impression that something is done when this hasn't been confirmed yet, e.g. if we haven't checked whether it worked.
 - When creating new issues, always 
     - Assign them to the user whose API key you are using (probably danibalcells)
     - Add them to the Memory Evals project
@@ -86,6 +87,7 @@ Project URL on Linear: https://linear.app/plastic-labs/project/memory-evals-2871
 
 # Git
 - Write short commit messages that describe the high-level goal the commit achieves rather than describing individual changes.
+- Only commit and push when specifically instructed to do so.
 
 # Terminal use
 When running terminal commands, append "2>&1 | cat" to the end of your command to ensure the terminal can exit correctly and we're not stuck waiting.
@@ -102,7 +104,8 @@ When running terminal commands, append "2>&1 | cat" to the end of your command t
     - Read description and comments of issues marked as "In Progress"
 - Use the following process for every message:
     - *Explore* by looking at relevant sources. This might involve, depending on the situation, source files, additional references, Linear issues and projects, or searching the web. Do not write any code just yet.
-    - *Plan* your approach to solving the specific task or problem presented by the user. Think about how you will solve it with the information available to you. Think hard about whether your proposed plan seems reasonable. Think hard about whether your solution is overengineered, or creeping the scope beyond the user's request. If it seems like a reasonable plan, and if you have been provided with a Linear issue for the task at hand, update it by adding a comment with your current plan.
+    - *Plan* your approach to solving the specific task or problem presented by the user. Think about how you will solve it with the information available to you. Think hard about whether your proposed plan seems reasonable. Think hard about whether your solution is overengineered, or creeping the scope beyond the user's request.
     - *Implement* your solution in code. As you do so, think again to verify whether the solution is reasonable.
-    - Only *commit* if explicitly asked to do so by the user.
+    - Only *commit* to GitHub or update Linear if explicitly asked to do so by the user.
     - If the user writes "DWCY" it means "Don't Write Code Yet". This indicates that you should only Explore and Plan, and discuss your proposed solution or findings with the user, but wait to Implement until the user has confirmed.
+- Do not start running processes that seem like they might take a long time or cause changes that are hard to reverse - for example, running experiments, ingesting, deleting or updating data - unless specifically instructed to do so.

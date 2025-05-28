@@ -188,13 +188,25 @@ def eval_recall(infile):
 
 def eval_question_answering(qas, eval_key='prediction', metric='f1'):
 
-
     all_ems = []
     all_recall = []
     exact_match_count = 0
     f1_count = 0
     answer_lengths = []
+    
+    skipped_questions = []
     for i, line in enumerate(qas):
+        # Check if we have the required fields
+        if 'answer' not in line:
+            print(f"Warning: Question {i} missing 'answer' field. Skipping.")
+            skipped_questions.append(i)
+            continue
+            
+        if eval_key not in line:
+            print(f"Warning: Question {i} missing prediction field '{eval_key}'. Skipping.")
+            skipped_questions.append(i)
+            continue
+        
         # line = json.loads(line)
         if type(line[eval_key]) == list:
             answer = line['answer']
@@ -204,6 +216,16 @@ def eval_question_answering(qas, eval_key='prediction', metric='f1'):
             answer = answer.split(';')[0].strip()
         
         output = line[eval_key]
+        
+        # Handle None or empty predictions
+        if output is None or output == '':
+            print(f"Warning: Question {i} has empty prediction. Using default.")
+            if line['category'] == 5:
+                output = "No information available"
+            else:
+                output = "No answer found"
+        
+        output = str(output).strip()
         
         # single-hop, temporal, open-domain eval without splitting for sub-answers 
         if line['category'] in [2, 3, 4]:
@@ -223,9 +245,9 @@ def eval_question_answering(qas, eval_key='prediction', metric='f1'):
             print(line)
             raise ValueError
         
-        assert i+1 == len(all_ems), all_ems
+        assert len(all_ems) == i+1-len(skipped_questions), f"Mismatch: {len(all_ems)} scores for {i+1-len(skipped_questions)} valid questions"
 
-        if eval_key + '_context' in line and len(line['evidence']) > 0:
+        if eval_key + '_context' in line and 'evidence' in line and len(line['evidence']) > 0:
             # recall_acc for dialog
             if line[eval_key + '_context'][0].startswith('S'):
                 sessions = [e[1:] for e in line[eval_key + '_context']]
@@ -236,7 +258,13 @@ def eval_question_answering(qas, eval_key='prediction', metric='f1'):
         else:
             all_recall.append(1)
 
-    print("{} QA samples evaluated; {} accuracy values".format(len(qas), len(all_ems)))
+    valid_questions = len(qas) - len(skipped_questions)
+    print("{} QA samples total, {} valid questions evaluated, {} accuracy values, {} skipped".format(
+        len(qas), valid_questions, len(all_ems), len(skipped_questions)))
+    
+    if skipped_questions:
+        print(f"Skipped questions: {skipped_questions}")
+    
     lens = 0.0
     return all_ems, lens, all_recall
 

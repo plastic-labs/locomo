@@ -16,6 +16,7 @@ from typing import Dict, List, Any
 import os
 import sys
 from pathlib import Path
+from tqdm import tqdm
 
 # Add parent directory to path to import Honcho
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -23,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from honcho import Honcho
 
 # Configuration
-HONCHO_API_KEY = os.environ.get("HONCHO_API_KEY", "demo")
+HONCHO_BASE_URL = "http://localhost:8000"
 HONCHO_ENVIRONMENT = os.environ.get("HONCHO_ENVIRONMENT", "local")
 LOCOMO_DATA_FILE = "data/locomo10.json"
 
@@ -100,7 +101,6 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
         session_a = honcho.apps.users.sessions.create(
             app_id=app.id,
             user_id=user_a.id,
-            location_id=f"session_{session_num}",
             metadata={
                 "original_session": session_num,
                 "date": session_date,
@@ -112,7 +112,6 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
         session_b = honcho.apps.users.sessions.create(
             app_id=app.id,
             user_id=user_b.id,
-            location_id=f"session_{session_num}",
             metadata={
                 "original_session": session_num,
                 "date": session_date,
@@ -201,7 +200,7 @@ def main():
     """Main ingestion function."""
     print(f"Connecting to Honcho (environment: {HONCHO_ENVIRONMENT})...")
     honcho = Honcho(
-        api_key=HONCHO_API_KEY,
+        base_url=HONCHO_BASE_URL,
         environment=HONCHO_ENVIRONMENT
     )
     
@@ -213,7 +212,7 @@ def main():
     
     # Process each conversation
     mappings = []
-    for sample in samples:
+    for sample in tqdm(samples):
         try:
             mapping = ingest_conversation(honcho, sample)
             mappings.append(mapping)
