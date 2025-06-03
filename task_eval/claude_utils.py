@@ -120,10 +120,14 @@ def get_claude_answers(in_data, out_data, prediction_key, args):
     assert len(in_data['qa']) == len(out_data['qa']), (len(in_data['qa']), len(out_data['qa']))
 
     # start instruction prompt
+
     speakers_names = list(set([d['speaker'] for d in in_data['conversation']['session_1']]))
     start_prompt = CONV_START_PROMPT.format(speakers_names[0], speakers_names[1])
     # start_tokens = model.count_tokens(start_prompt)
     start_tokens =100
+    print(f"[DEBUG] start_prompt: {start_prompt}")
+    print(f"[DEBUG] start_tokens: {start_tokens}")
+    print(f"speakers_names: {speakers_names}")
 
     if args.rag_mode:
         raise NotImplementedError
@@ -191,6 +195,8 @@ def get_claude_answers(in_data, out_data, prediction_key, args):
         if args.batch_size == 1:
 
             query = query_conv + '\n\n' + QA_PROMPT.format(questions[0]) if len(cat_5_idxs) == 0 else query_conv + '\n\n' + QA_PROMPT_CAT_5.format(questions[0])
+            print(f"[DEBUG] query: {query}")
+            print('--------------------------------')
             answer = run_claude(query, PER_QA_TOKEN_BUDGET, args.model)
             
             if len(cat_5_idxs) > 0:
@@ -203,6 +209,8 @@ def get_claude_answers(in_data, out_data, prediction_key, args):
         else:
             # query = query_conv + '\n' + QA_PROMPT_BATCH + "\n".join(["QUESTION: %s" % q for q in questions])
             query = query_conv + '\n' + question_prompt
+            print(f"[DEBUG] query: {query}")
+            print('--------------------------------')
             # print(query)
             
             trials = 0

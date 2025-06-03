@@ -9,6 +9,7 @@ import google.generativeai as genai
 from anthropic import Anthropic
 
 
+
 def get_openai_embedding(texts, model="text-embedding-ada-002"):
    texts = [text.replace("\n", " ") for text in texts]
    return np.array([openai.Embedding.create(input = texts, model=model)['data'][i]['embedding'] for i in range(len(texts))])
@@ -61,8 +62,7 @@ def run_claude(query, max_new_tokens, model_name):
         model_name = "claude-3-haiku-20240307"
 
     client = Anthropic(
-    # This is the default and can be omitted
-    api_key=os.environ.get("ANTHROPIC_API_KEY"),
+        api_key=os.environ.get("ANTHROPIC_API_KEY"),
     )
     # print(query)
     message = client.messages.create(

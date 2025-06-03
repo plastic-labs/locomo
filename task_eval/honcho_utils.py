@@ -36,7 +36,10 @@ Question: {} Short answer:
 QA_PROMPT_CAT_5 = """
 Based on the above context, answer the following question.
 
-Question: {} Short answer:
+Question: {}
+
+Respond only with the letter (a or b) that corresponds to the correct answer.
+Answer:
 """
 
 QA_PROMPT_BATCH = """
@@ -44,6 +47,23 @@ Based on the above conversations, write short answers for each of the following 
 
 """
 
+# ------------------------------------------------------------------
+# Helper for Category-5 (adversarial) answer mapping
+# ------------------------------------------------------------------
+
+def get_cat_5_answer(model_prediction: str, answer_key: dict[str, str]) -> str:
+    """Convert model's letter choice back to the full answer string.
+
+    1. If prediction is just 'a' or 'b' (possibly with parentheses) return
+       the mapped text.
+    2. Otherwise return the prediction unchanged (model wrote full answer).
+    """
+    text = model_prediction.strip().lower()
+    if text in {"a", "b"}:
+        return answer_key.get(text, model_prediction)
+    if text in {"(a)", "(b)"}:
+        return answer_key.get(text.strip("()"), model_prediction)
+    return model_prediction
 
 def throttle_request():
     """Apply throttling to stay under rate limits."""
@@ -183,7 +203,7 @@ def process_single_question(honcho: Honcho, app_id: str, speakers: Dict[str, str
                 print(f"[HONCHO DEBUG] Received empty/null answer: '{answer}'")
                 # For adversarial questions (category 5), return appropriate default
                 if category == 5:
-                    answer = "No information available"
+                    answer = "Empty response"
                 else:
                     answer = "No answer found"
             else:
@@ -230,7 +250,7 @@ def process_single_question(honcho: Honcho, app_id: str, speakers: Dict[str, str
                     print(f"[HONCHO DEBUG] Exhausted all {max_retries + 1} retry attempts")
                 # Return appropriate default based on question category
                 if category == 5:
-                    return "No information available"
+                    return "Empty response"
                 else:
                     return "No answer found"
             
@@ -243,11 +263,9 @@ def process_single_question(honcho: Honcho, app_id: str, speakers: Dict[str, str
             print(f"[HONCHO DEBUG] Retrying in {delay:.1f} seconds (attempt {attempt + 1}/{max_retries + 1})")
             time.sleep(delay)
     
-    # This should never be reached due to the logic above, but just in case
-    if category == 5:
-        return "No information available"
-    else:
-        return "No answer found"
+    # This line should be unreachable, but is included to satisfy static type checkers.
+    # If control gets here, treat it as an empty response.
+    return "Empty response" if category == 5 else "No answer found"
 
 
 def get_honcho_answers(in_data, out_data, prediction_key, args):
@@ -283,19 +301,19 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
     speakers = mapping['users']
     print(f"[HONCHO DEBUG] Found mapping - App ID: {app_id}, Speakers: {list(speakers.keys())}")
     
-    # Count how many questions need processing
-    questions_to_process = []
-    for i, qa in enumerate(in_data['qa']):
-        if prediction_key not in out_data['qa'][i] or args.overwrite:
-            questions_to_process.append(i)
-    
-    print(f"[HONCHO DEBUG] {len(questions_to_process)} questions need processing out of {len(in_data['qa'])} total")
+    # Prepare list of question indices that still need predictions.
+    questions_to_process: list[int] = [
+        i for i, qa in enumerate(in_data['qa'])
+        if (prediction_key not in out_data['qa'][i]) or args.overwrite
+    ]
+    print(f"[HONCHO DEBUG] Processing {len(questions_to_process)} questions (after filtering existing predictions)")
     
     # Process questions in batches
     total_questions = len(in_data['qa'])
     questions_processed = 0
     
-    for batch_start_idx in tqdm(range(0, len(in_data['qa']), args.batch_size), desc='Generating answers'):
+    # Only iterate over the limited set prepared above
+    for batch_start_idx in tqdm(range(0, len(questions_to_process), args.batch_size), desc='Generating answers'):
         batch_start = time.time()
         print(f"[HONCHO DEBUG] Starting batch at index {batch_start_idx}")
         
@@ -303,15 +321,16 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
         include_idxs = []
         
         # Collect questions for this batch
-        for i in range(batch_start_idx, min(batch_start_idx + args.batch_size, len(in_data['qa']))):
-            qa = in_data['qa'][i]
+        for i in range(batch_start_idx, min(batch_start_idx + args.batch_size, len(questions_to_process))):
+            orig_idx = questions_to_process[i]
+            qa = in_data['qa'][orig_idx]
             
             # Skip if already processed and not overwriting
-            if prediction_key in out_data['qa'][i] and not args.overwrite:
-                print(f"[HONCHO DEBUG] Skipping question {i + 1} (already processed)")
+            if prediction_key in out_data['qa'][orig_idx] and not args.overwrite:
+                print(f"[HONCHO DEBUG] Skipping question {orig_idx + 1} (already processed)")
                 continue
             
-            include_idxs.append(i)
+            include_idxs.append(orig_idx)
             questions_batch.append(qa)
         
         if not questions_batch:
@@ -332,9 +351,27 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
             if category == 2:
                 question += ' Use DATE of CONVERSATION to answer with an approximate date.'
                 print(f"[HONCHO DEBUG] Added temporal context to category 2 question")
+            elif category == 5:
+                # Build multiple-choice prompt exactly like claude_utils
+                base_q = qa['question'] + " Select the correct answer: (a) {} (b) {}. "
+                if random.random() < 0.5:
+                    question = base_q.format('Not mentioned in the conversation', qa.get('answer', qa.get('adversarial_answer', '')))
+                    answer_key = {'a': 'Not mentioned in the conversation', 'b': qa.get('answer', qa.get('adversarial_answer', ''))}
+                else:
+                    question = base_q.format(qa.get('answer', qa.get('adversarial_answer', '')), 'Not mentioned in the conversation')
+                    answer_key = {'b': 'Not mentioned in the conversation', 'a': qa.get('answer', qa.get('adversarial_answer', ''))}
+                print("[HONCHO DEBUG] Formatted category 5 question with two-choice options")
+            else:
+                answer_key = None
             
             # Get answer from Honcho
-            answer = process_single_question(honcho, app_id, speakers, question, category)
+            raw_answer = process_single_question(honcho, app_id, speakers, question, category)
+            
+            # Map letter to text for category-5
+            if category == 5 and answer_key is not None:
+                answer = get_cat_5_answer(raw_answer, answer_key)
+            else:
+                answer = raw_answer.strip()
             
             question_time = time.time() - question_start
             print(f"[HONCHO DEBUG] Question {idx + 1} completed in {question_time:.2f} seconds")
@@ -349,6 +386,8 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
                 # For Honcho, we could track which sessions were accessed
                 # This would require modifying the dialectic API response
                 out_data['qa'][idx][prediction_key + '_context'] = []
+            # DEBUG: print stored answer summary
+            print(f"[HONCHO DEBUG] STORED → idx {idx} | cat {category} | answer '{answer.strip()}'")
         
         batch_time = time.time() - batch_start
         print(f"[HONCHO DEBUG] Batch completed in {batch_time:.2f} seconds")
@@ -368,5 +407,21 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
     total_time = time.time() - start_time
     print(f"[HONCHO DEBUG] Honcho answer generation completed in {total_time:.2f} seconds")
     print(f"[HONCHO DEBUG] Processed {questions_processed} questions total")
+    
+    # CRITICAL FIX: Ensure ALL questions have 'answer' field as expected by evaluation.py
+    # For adversarial questions (category 5), copy 'adversarial_answer' to 'answer'
+    questions_fixed = 0
+    for qa in out_data['qa']:
+        if qa.get('category') == 5 and 'adversarial_answer' in qa and 'answer' not in qa:
+            qa['answer'] = qa['adversarial_answer']
+            questions_fixed += 1
+    print(f"[HONCHO DEBUG] Fixed {questions_fixed} adversarial questions to have 'answer' field")
+    
+    # Verify all questions now have answer fields
+    missing_answer = [i for i, qa in enumerate(out_data['qa']) if 'answer' not in qa]
+    if missing_answer:
+        print(f"[HONCHO DEBUG] WARNING: {len(missing_answer)} questions still missing 'answer' field: {missing_answer[:10]}")
+    else:
+        print(f"[HONCHO DEBUG] SUCCESS: All {len(out_data['qa'])} questions now have 'answer' field")
     
     return out_data 

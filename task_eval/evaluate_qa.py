@@ -124,6 +124,18 @@ def main():
                 # Expected format: list of samples
                 out_samples = {d['sample_id']: d for d in existing_data if isinstance(d, dict) and 'sample_id' in d}
                 print(f"[DEBUG] Found existing output file with {len(out_samples)} samples")
+                
+                # Safety check: count total existing predictions
+                total_existing_predictions = 0
+                for sample_data in existing_data:
+                    if 'qa' in sample_data:
+                        total_existing_predictions += sum(1 for qa in sample_data['qa'] if prediction_key in qa)
+                
+                if total_existing_predictions > 50 and not args.overwrite:
+                    print(f"[SAFETY WARNING] Found {total_existing_predictions} existing predictions!")
+                    print(f"[SAFETY WARNING] This represents substantial progress. Use --overwrite flag if you really want to replace these.")
+                    print(f"[SAFETY WARNING] Otherwise, the script will resume from where it left off.")
+                    
             elif isinstance(existing_data, dict) and 'sample_id' in existing_data:
                 # Single sample format (from progress saving)
                 out_samples = {existing_data['sample_id']: existing_data}
@@ -142,6 +154,9 @@ def main():
     for sample_idx, data in enumerate(samples):
         sample_start = time.time()
         print(f"[DEBUG] Processing sample {sample_idx + 1}/{len(samples)}: {data['sample_id']}")
+        print(f"[DEBUG] Available existing samples: {list(out_samples.keys())}")
+        print(f"[DEBUG] Looking for sample_id: '{data['sample_id']}'")
+        print(f"[DEBUG] Sample found in existing results: {data['sample_id'] in out_samples}")
 
         out_data = {'sample_id': data['sample_id']}
         if data['sample_id'] in out_samples:
@@ -149,14 +164,20 @@ def main():
             existing_qa = out_samples[data['sample_id']]['qa'].copy()
             out_data['qa'] = data['qa'].copy()  # Start with original data structure
             
+            print(f"[DEBUG] Merging {len(existing_qa)} existing QA items with {len(data['qa'])} input QA items")
+            
             # Merge in any existing predictions while preserving original fields
+            predictions_merged = 0
             for i, original_qa in enumerate(out_data['qa']):
                 if i < len(existing_qa) and prediction_key in existing_qa[i]:
                     out_data['qa'][i][prediction_key] = existing_qa[i][prediction_key]
+                    predictions_merged += 1
                     # Copy any other prediction-related fields
                     for key in existing_qa[i]:
                         if key.endswith('_prediction') or key.endswith('_context') or key.endswith('_f1') or key.endswith('_recall'):
                             out_data['qa'][i][key] = existing_qa[i][key]
+            
+            print(f"[DEBUG] Merged {predictions_merged} existing predictions")
             
             # Count how many questions already have predictions
             existing_predictions = sum(1 for qa in out_data['qa'] if prediction_key in qa)
@@ -192,10 +213,25 @@ def main():
         eval_time = time.time() - eval_start
         print(f"[DEBUG] Evaluation completed in {eval_time:.2f} seconds")
         
-        for i in range(0, len(answers['qa'])):
-            answers['qa'][i][model_key + '_f1'] = round(exact_matches[i], 3)
-            if args.use_rag and len(recall) > 0:
-                answers['qa'][i][model_key + '_recall'] = round(recall[i], 3)
+        print(f"[DEBUG] exact_matches: {exact_matches}")
+        print(f"[DEBUG] length of exact_matches: {len(exact_matches)}")
+        print(f"[DEBUG] lengths: {lengths}")
+        print(f"[DEBUG] recall: {recall}")
+        print(f"[DEBUG] length of recall: {len(recall)}")
+        # Map the returned scores back onto the original QA list.
+        # `exact_matches` contains a score ONLY for questions that were actually
+        # processed (i.e., those that had a prediction). We walk through the QA
+        # list in order and assign scores sequentially to those same items so
+        # indices stay aligned even if some questions were skipped.
+        score_idx = 0
+        for i, qa in enumerate(answers['qa']):
+            if prediction_key in qa:
+                if score_idx >= len(exact_matches):
+                    break  # safety – should not happen
+                qa[model_key + '_f1'] = round(exact_matches[score_idx], 3)
+                if args.use_rag and len(recall) > score_idx:
+                    qa[model_key + '_recall'] = round(recall[score_idx], 3)
+                score_idx += 1
 
         out_samples[data['sample_id']] = answers
         
