@@ -930,23 +930,6 @@ wheels = [
 ]
 
 [[package]]
-name = "honcho-ai"
-version = "0.2.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "anyio" },
-    { name = "distro" },
-    { name = "httpx" },
-    { name = "pydantic" },
-    { name = "sniffio" },
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/27/ea/b8f14e8e500bad7ed57fa12b352118f0a2af6c1553fb89c61005992ba359/honcho_ai-0.2.0.tar.gz", hash = "sha256:b2b3a17b6b3210efbb4964b05ac635543e4032bee991dc1d584cc5e7cd13979e", size = 117526 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/47/56/893a79d35271a2d3d794badf319e08b52a5a254544d9e4a9ebaa6fc9229a/honcho_ai-0.2.0-py3-none-any.whl", hash = "sha256:7057e3ec64707da37439a78fa1deabc84a4d5f92983991083e6979d8e5e52e06", size = 115382 },
-]
-
-[[package]]
 name = "httpcore"
 version = "0.18.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1339,7 +1322,6 @@ dependencies = [
     { name = "fastapi" },
     { name = "google-generativeai" },
     { name = "gradio" },
-    { name = "honcho-ai" },
     { name = "httpx" },
     { name = "huggingface-hub" },
     { name = "ipython" },
@@ -1379,7 +1361,6 @@ requires-dist = [
     { name = "fastapi", specifier = "==0.104.1" },
     { name = "google-generativeai", specifier = "==0.7.2" },
     { name = "gradio", specifier = "==3.24.1" },
-    { name = "honcho-ai", specifier = ">=0.2.0" },
     { name = "httpx", specifier = "==0.25.0" },
     { name = "huggingface-hub", specifier = "==0.17.3" },
     { name = "ipython", specifier = ">=9.2.0" },

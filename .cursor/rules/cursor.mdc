@@ -4,7 +4,10 @@ globs:
 alwaysApply: true
 ---
 # Project Context Rules
-Project URL on Linear: https://linear.app/plastic-labs/project/memory-evals-2871c6f40dbf
+Project URLs on Linear: 
+https://linear.app/plastic-labs/project/memory-evals-2871c6f40dbf
+https://linear.app/plastic-labs/project/implement-and-test-rsr-framework-cdb676a303c2
+
 
 
 ## Linear Project Context
@@ -109,3 +112,7 @@ When running terminal commands, append "2>&1 | cat" to the end of your command t
     - Only *commit* to GitHub or update Linear if explicitly asked to do so by the user.
     - If the user writes "DWCY" it means "Don't Write Code Yet". This indicates that you should only Explore and Plan, and discuss your proposed solution or findings with the user, but wait to Implement until the user has confirmed.
 - Do not start running processes that seem like they might take a long time or cause changes that are hard to reverse - for example, running experiments, ingesting, deleting or updating data - unless specifically instructed to do so.
+
+# Mode shortcuts
+The user might begin a message or conversation specifying a "Mode", by saying, for example "Mode 1" or "M1". These are shorthands for commonly used sets of steps and additional instructions for you to follow.
+- Mode 1: You will be given a Linear issue number. Your job is to thoroughly explore the relevant context, both on linear and in the current workspace (as well as on the web if needed), come up with an action plan and present it to the user without making any modifications to the existing codebase. You and the user will then iterate on this plan until you reach agreement. Once you have been given explicit permission to implement, go ahead.

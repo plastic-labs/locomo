@@ -281,7 +281,8 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
     client_start = time.time()
     honcho = Honcho(
         base_url=HONCHO_BASE_URL,
-        environment=HONCHO_ENVIRONMENT
+        environment=HONCHO_ENVIRONMENT,
+        timeout=300
     )
     client_time = time.time() - client_start
     print(f"[HONCHO DEBUG] Honcho client initialized in {client_time:.2f} seconds")

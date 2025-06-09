@@ -1,82 +1,10 @@
 [
   {
     "sample_id": "conv-26",
-    "app_id": "a9kd0lL8oMgqE4qo_qgIv",
+    "app_id": "FtvbDn293Qz8ZrHZkujCK",
     "users": {
-      "Caroline": "rNOKQAFYreewZE314A4Ma",
-      "Melanie": "5gJlD4UFrXhSlZVIujrJH"
-    }
-  },
-  {
-    "sample_id": "conv-30",
-    "app_id": "AgtBFyoAfjJBcd7E7a93l",
-    "users": {
-      "Jon": "HFYXasjwb2e_42ceLdwRe",
-      "Gina": "62InBymbDPCJtw5CORJoP"
-    }
-  },
-  {
-    "sample_id": "conv-41",
-    "app_id": "2Hx7eblfDcvIv9a8FdV2J",
-    "users": {
-      "John": "bxlW7nv541uztkSdyXg3k",
-      "Maria": "Ej7pjq2lqf8adGfxGDw8M"
-    }
-  },
-  {
-    "sample_id": "conv-42",
-    "app_id": "5tUszwEUeIbXyzz6ZNuJf",
-    "users": {
-      "Joanna": "EJDbBXWpMHFWLNlB1JIvB",
-      "Nate": "g5NimJgBochPBsH9-kbnf"
-    }
-  },
-  {
-    "sample_id": "conv-43",
-    "app_id": "JuyBuguw1L671wehUo89D",
-    "users": {
-      "Tim": "-N7EkeqzWxxt9HLn08fXY",
-      "John": "VAyW0OGAVzkjBobdNcSqD"
-    }
-  },
-  {
-    "sample_id": "conv-44",
-    "app_id": "cLkVUmy-YYVPuZv72EQHZ",
-    "users": {
-      "Audrey": "xrtWctimvy7LmTx-2Kmun",
-      "Andrew": "YZS26rAz1FG--2uRQDvPX"
-    }
-  },
-  {
-    "sample_id": "conv-47",
-    "app_id": "D7b-Y331DSSkxGE-B30RK",
-    "users": {
-      "James": "Z8-TkuIMZKuh_zHxU1ezM",
-      "John": "VPJQJvwodkiMeFDgiyBRK"
-    }
-  },
-  {
-    "sample_id": "conv-48",
-    "app_id": "UaUJO98wGe8zTkysgX-Dc",
-    "users": {
-      "Deborah": "zLuMtSWgZuQ74uDyZj4hG",
-      "Jolene": "Wj1Z59lLBaowbNYiJ_WQp"
-    }
-  },
-  {
-    "sample_id": "conv-49",
-    "app_id": "_ZSoq2-2oWs-XvyTsceHX",
-    "users": {
-      "Evan": "ZEVwSVGTQ5slzY6-TRp0d",
-      "Sam": "UR44Va3IL3ld0DBSwO4yu"
-    }
-  },
-  {
-    "sample_id": "conv-50",
-    "app_id": "QHOrCS2km4-xn3mgvPG3f",
-    "users": {
-      "Calvin": "_CnWWjRIqcYMD4XW9vU7S",
-      "Dave": "2nEVbHJ9OleFW27c7yy7G"
+      "Caroline": "GKbPGSRscqwXECkIFe4ex",
+      "Melanie": "zhYBnVtB2mhNRvt08sZen"
     }
   }
 ]

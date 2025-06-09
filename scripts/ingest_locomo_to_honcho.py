@@ -11,12 +11,13 @@ structure in Honcho:
 """
 
 import json
-from datetime import datetime
-from typing import Dict, List, Any
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List, Any, cast, Literal
 import os
 import sys
 from pathlib import Path
 from tqdm import tqdm
+import argparse
 
 # Add parent directory to path to import Honcho
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -26,18 +27,29 @@ from honcho import Honcho
 # Configuration
 HONCHO_BASE_URL = "http://localhost:8000"
 HONCHO_ENVIRONMENT = os.environ.get("HONCHO_ENVIRONMENT", "local")
-LOCOMO_DATA_FILE = "data/locomo10.json"
+# LOCOMO_DATA_FILE = "data/locomo10.json"
+DEFAULT_DATA_FILE = "data/conv-26_only.json"
 
 
-def parse_datetime(date_str: str) -> str:
-    """Convert LoCoMo date format to ISO format."""
-    # LoCoMo format: "7 May 2023"
+def parse_session_datetime(date_str: str) -> datetime:
+    """Parse strings like '1:56 pm on 8 May, 2023' into a UTC-aware datetime.
+
+    The LoCoMo JSON encodes each session's start time with that exact pattern.
+    If parsing fails we fall back to *now* just so the script never crashes.
+    """
     try:
-        dt = datetime.strptime(date_str, "%d %B %Y")
-        return dt.isoformat()
-    except:
-        # If parsing fails, return as is
-        return date_str
+        # Normalise AM/PM capitalization just in case ("pm" -> "PM")
+        parts = date_str.split()
+        if parts[1].lower() in {"am", "pm"}:
+            parts[1] = parts[1].upper()
+            date_str = " ".join(parts)
+
+        dt = datetime.strptime(date_str, "%I:%M %p on %d %B, %Y")
+        return dt.replace(tzinfo=timezone.utc)
+    except Exception:
+        # Fallback – shouldn't happen in clean datasets
+        print(f"Failed to parse datetime: {date_str}")
+        return datetime.now(tz=timezone.utc)
 
 
 def extract_speaker_name(dialog: Dict[str, Any]) -> str:
@@ -80,11 +92,11 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
     print(f"  Created users: {speaker_a} (ID: {user_a.id}), {speaker_b} (ID: {user_b.id})")
     
     # Process sessions
-    session_nums = sorted([
-        int(key.split("_")[-1]) 
-        for key in conversation.keys() 
+    session_nums = sorted(
+        int(key.split("_")[-1])
+        for key in conversation.keys()
         if key.startswith("session_") and not key.endswith("_date_time")
-    ])
+    )
     
     # Create sessions for both users
     for session_num in session_nums:
@@ -95,7 +107,8 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
             continue
             
         session_data = conversation[session_key]
-        session_date = conversation.get(date_key, f"Session {session_num}")
+        raw_session_dt = conversation.get(date_key, "")
+        base_dt = parse_session_datetime(raw_session_dt) if raw_session_dt else datetime.now(tz=timezone.utc)
         
         # Create session for user A
         session_a = honcho.apps.users.sessions.create(
@@ -103,7 +116,7 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
             user_id=user_a.id,
             metadata={
                 "original_session": session_num,
-                "date": session_date,
+                "session_timestamp": base_dt.isoformat(),
                 "sample_id": sample_id
             }
         )
@@ -114,24 +127,25 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
             user_id=user_b.id,
             metadata={
                 "original_session": session_num,
-                "date": session_date,
+                "session_timestamp": base_dt.isoformat(),
                 "sample_id": sample_id
             }
         )
         
-        print(f"  Processing session {session_num} ({session_date})...")
+        print(f"  Processing session {session_num} ({base_dt})...")
         
         # Process messages in this session
-        for dialog in session_data:
+        for idx, dialog in enumerate(session_data):
             speaker = dialog["speaker"]
             text = dialog["text"]
             dia_id = dialog.get("dia_id", "")
             
-            # Additional metadata
+            created_at_ts = base_dt + timedelta(minutes=idx)
+
             metadata = {
                 "dia_id": dia_id,
                 "original_session": session_num,
-                "date": session_date,
+                "session_timestamp": created_at_ts.isoformat(),
                 "original_speaker": speaker
             }
             
@@ -150,7 +164,8 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                     session_id=session_a.id,
                     content=text,
                     is_user=True,
-                    metadata=metadata
+                    metadata=metadata,
+                    created_at=created_at_ts
                 )
                 # A's message as assistant in B's session
                 honcho.apps.users.sessions.messages.create(
@@ -159,7 +174,8 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                     session_id=session_b.id,
                     content=text,
                     is_user=False,
-                    metadata=metadata
+                    metadata=metadata,
+                    created_at=created_at_ts
                 )
             else:  # speaker == speaker_b
                 # B's message as user
@@ -169,7 +185,8 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                     session_id=session_b.id,
                     content=text,
                     is_user=True,
-                    metadata=metadata
+                    metadata=metadata,
+                    created_at=created_at_ts
                 )
                 # B's message as assistant in A's session
                 honcho.apps.users.sessions.messages.create(
@@ -178,7 +195,8 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                     session_id=session_a.id,
                     content=text,
                     is_user=False,
-                    metadata=metadata
+                    metadata=metadata,
+                    created_at=created_at_ts
                 )
         
         print(f"    Processed {len(session_data)} messages")
@@ -198,14 +216,20 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
 
 def main():
     """Main ingestion function."""
+    parser = argparse.ArgumentParser(description="Ingest LoCoMo data into Honcho")
+    parser.add_argument("--file", "-f", default=DEFAULT_DATA_FILE, help="Path to LoCoMo JSON file")
+    args = parser.parse_args()
+
+    data_file = args.file
+
     print(f"Connecting to Honcho (environment: {HONCHO_ENVIRONMENT})...")
     honcho = Honcho(
         base_url=HONCHO_BASE_URL,
-        environment=HONCHO_ENVIRONMENT
+        environment=cast(Literal["demo", "local", "production"], HONCHO_ENVIRONMENT)
     )
     
-    print(f"Loading LoCoMo dataset from {LOCOMO_DATA_FILE}...")
-    with open(LOCOMO_DATA_FILE, 'r') as f:
+    print(f"Loading LoCoMo dataset from {data_file}...")
+    with open(data_file, 'r') as f:
         samples = json.load(f)
     
     print(f"Found {len(samples)} conversations to ingest")
