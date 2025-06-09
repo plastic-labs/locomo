@@ -63,13 +63,8 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
     print(f"\nProcessing {sample_id}...")
     
     # Create app for this conversation
-    app = honcho.apps.create(
+    app = honcho.apps.get_or_create(
         name=f"locomo_{sample_id}",
-        metadata={
-            "sample_id": sample_id,
-            "source": "locomo",
-            "qa_count": len(sample.get("qa", []))
-        }
     )
     print(f"  Created app: {app.name} (ID: {app.id})")
     
@@ -79,15 +74,15 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
     speaker_b = conversation.get("speaker_b", "Speaker B")
     
     # Create users for both speakers
-    user_a = honcho.apps.users.create(
+    user_a = honcho.apps.users.get_or_create(
         app_id=app.id,
         name=speaker_a,
-        metadata={"role": "speaker_a", "sample_id": sample_id}
+        # metadata={"role": "speaker_a", "sample_id": sample_id}
     )
-    user_b = honcho.apps.users.create(
+    user_b = honcho.apps.users.get_or_create(
         app_id=app.id,
         name=speaker_b,
-        metadata={"role": "speaker_b", "sample_id": sample_id}
+        # metadata={"role": "speaker_b", "sample_id": sample_id}
     )
     print(f"  Created users: {speaker_a} (ID: {user_a.id}), {speaker_b} (ID: {user_b.id})")
     
