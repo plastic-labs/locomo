@@ -28,7 +28,7 @@ last_request_time = 0
 
 # Question answering prompts
 QA_PROMPT = """
-Based on the above context, write an answer in the form of a short phrase for the following question. Answer with exact words from the context whenever possible.
+Based on the above context, write an answer in the form of a short phrase for the following question. Answer with exact words from the context whenever possible. Do not include explanations or other text.
 
 Question: {} Short answer:
 """

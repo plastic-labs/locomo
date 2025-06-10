@@ -9,7 +9,7 @@
           "D1:3"
         ],
         "category": 2,
-        "honcho_prediction": "June 4, 2025",
+        "honcho_prediction": "Yesterday (based on conversation date)",
         "honcho_f1": 0
       },
       {
@@ -19,8 +19,8 @@
           "D1:12"
         ],
         "category": 2,
-        "honcho_prediction": "June 2024",
-        "honcho_f1": 0
+        "honcho_prediction": "Around May 2022",
+        "honcho_f1": 0.5
       },
       {
         "question": "What fields would Caroline be likely to pursue in her educaton?",
@@ -40,7 +40,7 @@
           "D2:8"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "research",
         "honcho_f1": 0.0
       },
       {
@@ -50,8 +50,8 @@
           "D1:5"
         ],
         "category": 1,
-        "honcho_prediction": "Caroline is transgender",
-        "honcho_f1": 0.4
+        "honcho_prediction": "transgender woman",
+        "honcho_f1": 1.0
       },
       {
         "question": "When did Melanie run a charity race?",
@@ -60,8 +60,8 @@
           "D2:1"
         ],
         "category": 2,
-        "honcho_prediction": "May 31, 2025",
-        "honcho_f1": 0.25
+        "honcho_prediction": "May 25, 2023",
+        "honcho_f1": 0.75
       },
       {
         "question": "When is Melanie planning on going camping?",
@@ -70,8 +70,8 @@
           "D2:7"
         ],
         "category": 2,
-        "honcho_prediction": "Next month (July 2025)",
-        "honcho_f1": 0
+        "honcho_prediction": "Next month (approximately June 2023)",
+        "honcho_f1": 0.571
       },
       {
         "question": "What is Caroline's relationship status?",
@@ -81,7 +81,7 @@
           "D2:14"
         ],
         "category": 1,
-        "honcho_prediction": "Single",
+        "honcho_prediction": "Single, experienced a tough breakup in June 2023",
         "honcho_f1": 1.0
       },
       {
@@ -91,8 +91,8 @@
           "D3:1"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
-        "honcho_f1": 0.25
+        "honcho_prediction": "No answer found",
+        "honcho_f1": 0
       },
       {
         "question": "When did Caroline meet up with her friends, family, and mentors?",
@@ -101,8 +101,8 @@
           "D3:11"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
-        "honcho_f1": 0.25
+        "honcho_prediction": "June 9, 2023",
+        "honcho_f1": 0.75
       },
       {
         "question": "How long has Caroline had her current group of friends for?",
@@ -111,8 +111,8 @@
           "D3:13"
         ],
         "category": 2,
-        "honcho_prediction": "Since June 2021 (4 years)",
-        "honcho_f1": 0.571
+        "honcho_prediction": "Since June 9, 2023, when it was noted that \"Caroline has known her friends for four years.\"",
+        "honcho_f1": 0.105
       },
       {
         "question": "Where did Caroline move from 4 years ago?",
@@ -122,8 +122,8 @@
           "D4:3"
         ],
         "category": 1,
-        "honcho_prediction": "Sweden",
-        "honcho_f1": 1.0
+        "honcho_prediction": "her home country",
+        "honcho_f1": 0.0
       },
       {
         "question": "How long ago was Caroline's 18th birthday?",
@@ -132,7 +132,7 @@
           "D4:5"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "Based on the context, Caroline's 18th birthday was around June 27, 2023, when she received a hand-painted bowl as a gift. The conversation appears to be taking place in August 2023 (based on the dates in the long-term facts), so her 18th birthday was approximately 1-2 months before this conversation.",
         "honcho_f1": 0
       },
       {
@@ -154,8 +154,8 @@
           "D3:5"
         ],
         "category": 3,
-        "honcho_prediction": "No, Caroline would likely not pursue counseling without support. Her motivation to help others is directly influenced by \"her own experience receiving support\" and her personal growth journey has \"prepared her for helping others.\" The context indicates her career choice stems from experiencing acceptance and support herself.",
-        "honcho_f1": 0.087
+        "honcho_prediction": "Caroline's interest in mental health was sparked by her positive experiences with counseling and support groups, and she wants to help others who have had similar experiences.",
+        "honcho_f1": 0
       },
       {
         "question": "What activities does Melanie partake in?",
@@ -167,8 +167,8 @@
           "D1:18"
         ],
         "category": 1,
-        "honcho_prediction": "painting, swimming with her kids, taking care of her kids, working",
-        "honcho_f1": 0.35
+        "honcho_prediction": "running, reading, playing the violin, painting, swimming with kids, hiking in mountains, exploring forests, camping, playing the clarinet",
+        "honcho_f1": 0.625
       },
       {
         "question": "When did Melanie sign up for a pottery class?",
@@ -177,8 +177,8 @@
           "D5:4"
         ],
         "category": 2,
-        "honcho_prediction": "June 4, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "Around July 2023",
+        "honcho_f1": 0.667
       },
       {
         "question": "When is Caroline going to the transgender conference?",
@@ -187,8 +187,8 @@
           "D5:13"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "July 2023",
+        "honcho_f1": 1.0
       },
       {
         "question": "Where has Melanie camped?",
@@ -199,8 +199,8 @@
           "D8:32"
         ],
         "category": 1,
-        "honcho_prediction": "Lake",
-        "honcho_f1": 0.0
+        "honcho_prediction": "at the beach, in the forest, in the mountains",
+        "honcho_f1": 0.667
       },
       {
         "question": "What do Melanie's kids like?",
@@ -210,7 +210,7 @@
           "D4:8"
         ],
         "category": 1,
-        "honcho_prediction": "Swimming with her kids",
+        "honcho_prediction": "swimming",
         "honcho_f1": 0.0
       },
       {
@@ -220,7 +220,7 @@
           "D6:4"
         ],
         "category": 2,
-        "honcho_prediction": "June 4, 2025",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -230,7 +230,7 @@
           "D6:11"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -240,8 +240,8 @@
           "D6:9"
         ],
         "category": 3,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "Yes, likely has children's books including classics",
+        "honcho_f1": 0.571
       },
       {
         "question": "What books has Melanie read?",
@@ -251,7 +251,7 @@
           "D6:10"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "Running, reading, and playing the violin",
         "honcho_f1": 0.0
       },
       {
@@ -262,7 +262,7 @@
           "D5:4"
         ],
         "category": 1,
-        "honcho_prediction": "running, painting, playing clarinet",
+        "honcho_prediction": "running, painting, playing the violin, playing the clarinet",
         "honcho_f1": 0.5
       },
       {
@@ -272,8 +272,8 @@
           "D7:1"
         ],
         "category": 2,
-        "honcho_prediction": "June 3, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "July 12, 2023",
+        "honcho_f1": 0.667
       },
       {
         "question": "When did Melanie read the book \"nothing is impossible\"?",
@@ -282,7 +282,7 @@
           "D7:8"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "October 13, 2023",
         "honcho_f1": 0
       },
       {
@@ -293,7 +293,7 @@
           "D7:9"
         ],
         "category": 3,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0.4
       },
       {
@@ -303,8 +303,8 @@
           "D8:9"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "July 15, 2023",
+        "honcho_f1": 0.75
       },
       {
         "question": "When did Melanie go to the pottery workshop?",
@@ -313,16 +313,16 @@
           "D8:2"
         ],
         "category": 2,
-        "honcho_prediction": "Last Friday (approximately June 1, 2025)",
-        "honcho_f1": 0.182
+        "honcho_prediction": "July 15, 2023",
+        "honcho_f1": 0.75
       },
       {
         "question": "Would Melanie be considered a member of the LGBTQ community?",
         "answer": "Likely no, she does not refer to herself as part of it",
         "evidence": [],
         "category": 3,
-        "honcho_prediction": "Based on the context, Melanie likely belongs to or supports the LGBTQ+ community. There are multiple observations indicating this, including \"User likely belongs to or supports the LGBTQ+ community\" and \"Melanie likely has supportive views toward LGBTQ+ identities and experiences.\" Additionally, Mel has been asking about LGBTQ advocacy activities and responding positively to Caroline's experiences with LGBTQ support groups.",
-        "honcho_f1": 0.062
+        "honcho_prediction": "Melanie supports the LGBTQ community but is not explicitly identified as a member herself.",
+        "honcho_f1": 0.25
       },
       {
         "question": "When did Melanie go camping in June?",
@@ -331,8 +331,8 @@
           "D4:8"
         ],
         "category": 2,
-        "honcho_prediction": "Around May 22-23, 2025 (approximately two weekends before June 5, 2025)",
-        "honcho_f1": 0.25
+        "honcho_prediction": "Around mid-June (approximately June 15-20, 2023)",
+        "honcho_f1": 0.364
       },
       {
         "question": "What LGBTQ+ events has Caroline participated in?",
@@ -344,8 +344,8 @@
           "D1:3"
         ],
         "category": 1,
-        "honcho_prediction": "Caroline has attended a LGBTQ support group, volunteered at an LGBTQ+ youth center regularly, and is transgender herself.",
-        "honcho_f1": 0.167
+        "honcho_prediction": "LGBTQ conference, volunteers at LGBTQ+ youth center, visited LGBTQ center, participating in LGBTQ art show, member of 'Connected LGBTQ Activists', attended LGBTQ+ counseling workshop, LGBTQ support group",
+        "honcho_f1": 0.267
       },
       {
         "question": "When did Caroline go to a pride parade during the summer?",
@@ -354,7 +354,7 @@
           "D5:1"
         ],
         "category": 2,
-        "honcho_prediction": "Last Friday (approximately May 30, 2025)",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -365,7 +365,7 @@
           "D3:3"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "Organizing a talent show for children and volunteering at an LGBTQ+ youth center",
         "honcho_f1": 0.0
       },
       {
@@ -375,8 +375,8 @@
           "D9:1"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "Around July 3, 2023",
+        "honcho_f1": 0.4
       },
       {
         "question": "When did Caroline join a mentorship program?",
@@ -385,8 +385,8 @@
           "D9:2"
         ],
         "category": 2,
-        "honcho_prediction": "Last weekend (approximately June 1, 2025)",
-        "honcho_f1": 0.182
+        "honcho_prediction": "No answer found",
+        "honcho_f1": 0
       },
       {
         "question": "What did Melanie paint recently?",
@@ -410,8 +410,8 @@
           "D3:14"
         ],
         "category": 1,
-        "honcho_prediction": "Swimming with her kids",
-        "honcho_f1": 0.067
+        "honcho_prediction": "swimming with her kids, camping with her family, camping at the beach, roasting marshmallows with her children",
+        "honcho_f1": 0.15
       },
       {
         "question": "In what ways is Caroline participating in the LGBTQ community?",
@@ -423,8 +423,8 @@
           "D9:2"
         ],
         "category": 1,
-        "honcho_prediction": "Attending an LGBTQ support group, finding transgender stories inspiring, and feeling accepted and courageous to embrace herself",
-        "honcho_f1": 0.121
+        "honcho_prediction": "Caroline attends LGBTQ support groups, volunteers at an LGBTQ+ youth center, participates in an LGBTQ art show, is a member of \"Connected LGBTQ Activists,\" and attended an LGBTQ conference.",
+        "honcho_f1": 0.285
       },
       {
         "question": "How many times has Melanie gone to the beach in 2023?",
@@ -434,7 +434,7 @@
           "D6:16"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0.0
       },
       {
@@ -444,8 +444,8 @@
           "D10:3"
         ],
         "category": 2,
-        "honcho_prediction": "June 3, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "July 20, 2023",
+        "honcho_f1": 0.75
       },
       {
         "question": "Would Melanie be more interested in going to a national park or a theme park?",
@@ -467,8 +467,8 @@
           "D9:14"
         ],
         "category": 1,
-        "honcho_prediction": "Caroline draws and paints, creating art across multiple mediums with inspiration from nature and personal experiences",
-        "honcho_f1": 0.154
+        "honcho_prediction": "Caroline draws art and paints, focusing on expressing her trans experience, gender transition, and journey toward self-acceptance and womanhood.",
+        "honcho_f1": 0.333
       },
       {
         "question": "When is Melanie's daughter's birthday?",
@@ -477,7 +477,7 @@
           "D11:1"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "Around mid-August (based on \"Aug 14 2023: Melanie celebrated her daughter's birthday with a concert\")",
         "honcho_f1": 0
       },
       {
@@ -487,16 +487,16 @@
           "D11:4"
         ],
         "category": 2,
-        "honcho_prediction": "August 30, 2025",
-        "honcho_f1": 0.25
+        "honcho_prediction": "No answer found",
+        "honcho_f1": 0
       },
       {
         "question": "Would Melanie be considered an ally to the transgender community?",
         "answer": "Yes, she is supportive",
         "evidence": [],
         "category": 3,
-        "honcho_prediction": "Based on the context, Melanie would be considered an ally to the transgender community. She responded positively to Caroline's transgender support group experience, saying \"Wow, that's cool\" and asking about \"inspiring stories.\" She also described the group as \"helpful\" and told Caroline \"You've got guts.\" The context notes multiple observations that \"Melanie likely has supportive views toward LGBTQ+ identities\" and is \"likely an ally to the LGBTQ community.\"",
-        "honcho_f1": 0.097
+        "honcho_prediction": "Supportive of the transgender community",
+        "honcho_f1": 0.25
       },
       {
         "question": "Who supports Caroline when she has a negative experience?",
@@ -506,8 +506,8 @@
           "D3:11"
         ],
         "category": 1,
-        "honcho_prediction": "family",
-        "honcho_f1": 0.333
+        "honcho_prediction": "Friends, family, and role models",
+        "honcho_f1": 0.667
       },
       {
         "question": "What types of pottery have Melanie and her kids made?",
@@ -518,8 +518,8 @@
           "D5:6"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0.0
+        "honcho_prediction": "bowls and pottery from workshops",
+        "honcho_f1": 0.2
       },
       {
         "question": "When did Caroline and Melanie go to a pride fesetival together?",
@@ -528,7 +528,7 @@
           "D12:15"
         ],
         "category": 2,
-        "honcho_prediction": "June 2024",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -538,7 +538,7 @@
           "D12:1"
         ],
         "category": 3,
-        "honcho_prediction": "Progressive or left-leaning",
+        "honcho_prediction": "Progressive, supportive of LGBTQ rights",
         "honcho_f1": 0
       },
       {
@@ -561,8 +561,8 @@
           "D7:18"
         ],
         "category": 1,
-        "honcho_prediction": "Luna and Oliver",
-        "honcho_f1": 0.444
+        "honcho_prediction": "Luna (dog) and Oliver (cat)",
+        "honcho_f1": 0.267
       },
       {
         "question": "When did Caroline apply to adoption agencies?",
@@ -571,8 +571,8 @@
           "D13:1"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "May 25, 2023",
+        "honcho_f1": 0.25
       },
       {
         "question": "When did Caroline draw a self-portrait?",
@@ -581,8 +581,8 @@
           "D13:11"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "August 23, 2023",
+        "honcho_f1": 0.75
       },
       {
         "question": "What subject have Caroline and Melanie both painted?",
@@ -592,8 +592,8 @@
           "D8:6"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0.0
+        "honcho_prediction": "Sunset",
+        "honcho_f1": 1.0
       },
       {
         "question": "What symbols are important to Caroline?",
@@ -603,8 +603,8 @@
           "D4:1"
         ],
         "category": 1,
-        "honcho_prediction": "The rainbow flag and transgender symbolism",
-        "honcho_f1": 0.667
+        "honcho_prediction": "Red and blue colors in art, which represent the binary gender system, and the mixing of colors to symbolize challenging rigid gender norms",
+        "honcho_f1": 0.091
       },
       {
         "question": "When did Caroline encounter people on a hike and have a negative experience?",
@@ -613,8 +613,8 @@
           "D14:1"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "August 17, 2023",
+        "honcho_f1": 0.5
       },
       {
         "question": "When did Melanie make a plate in pottery class?",
@@ -623,8 +623,8 @@
           "D14:4"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "July 3, 2023",
+        "honcho_f1": 0.333
       },
       {
         "question": "Would Caroline be considered religious?",
@@ -634,7 +634,7 @@
           "D12:1"
         ],
         "category": 3,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -645,8 +645,8 @@
           "D2:5"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0.0
+        "honcho_prediction": "Violin and clarinet",
+        "honcho_f1": 1.0
       },
       {
         "question": "What musical artists/bands has Melanie seen?",
@@ -656,7 +656,7 @@
           "D11:3"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "Ed Sheeran, Bach, Mozart",
         "honcho_f1": 0.0
       },
       {
@@ -666,7 +666,7 @@
           "D15:2"
         ],
         "category": 2,
-        "honcho_prediction": "June 4, 2025",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -676,8 +676,8 @@
           "D15:11"
         ],
         "category": 2,
-        "honcho_prediction": "Next month (approximately July 2025)",
-        "honcho_f1": 0
+        "honcho_prediction": "In about 2-3 weeks from August 28, 2023",
+        "honcho_f1": 0.2
       },
       {
         "question": "Would Melanie likely enjoy the song \"The Four Seasons\" by Vivaldi?",
@@ -686,8 +686,8 @@
           "D15:28"
         ],
         "category": 3,
-        "honcho_prediction": "Likely yes - the user appreciates music deeply, asking about songs with meaning and stating \"Music's amazing, isn't it?\" They also enjoy nature (painted a lake sunrise) and associate nature with peace and tranquility, which aligns with Vivaldi's nature-inspired classical composition.",
-        "honcho_f1": 0.056
+        "honcho_prediction": "Yes, likely would enjoy it. User enjoys classical music (Bach, Mozart) and plays violin, which suggests an appreciation for classical string compositions like Vivaldi's \"The Four Seasons.\"",
+        "honcho_f1": 0.08
       },
       {
         "question": "What are some changes Caroline has faced during her transition journey?",
@@ -697,8 +697,8 @@
           "D11:14"
         ],
         "category": 1,
-        "honcho_prediction": "Changes in social relationships, challenges during her transition process, and reaching a level of self-acceptance sufficient to now help others with similar issues",
-        "honcho_f1": 0.125
+        "honcho_prediction": "Changes in friendships, with some friends remaining supportive and others not; body changes; challenges with transitioning and acceptance",
+        "honcho_f1": 0.205
       },
       {
         "question": "What does Melanie do with her family on hikes?",
@@ -708,7 +708,7 @@
           "D10:12"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0.0
       },
       {
@@ -718,8 +718,8 @@
           "D16:1"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "Sep 13 2023: User enjoys biking with friends.",
+        "honcho_f1": 0.308
       },
       {
         "question": "How long has Melanie been practicing art?",
@@ -728,8 +728,8 @@
           "D16:8"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "Since 2022 (based on \"I painted that lake sunrise last year\" from the current conversation dated 2023)",
+        "honcho_f1": 0.111
       },
       {
         "question": "What personality traits might Melanie say Caroline has?",
@@ -740,7 +740,7 @@
           "D7:4"
         ],
         "category": 3,
-        "honcho_prediction": "Empathetic, courageous, supportive, accepting, determined",
+        "honcho_prediction": "supportive, encouraging, empathetic, understanding",
         "honcho_f1": 0
       },
       {
@@ -751,8 +751,8 @@
           "D15:13"
         ],
         "category": 1,
-        "honcho_prediction": "LGBTQ support group with transgender stories",
-        "honcho_f1": 0.0
+        "honcho_prediction": "LGBTQ support group, LGBTQ conference, transgender conference, LGBTQ+ counseling workshop",
+        "honcho_f1": 0.333
       },
       {
         "question": "What book did Melanie read from Caroline's suggestion?",
@@ -762,7 +762,7 @@
           "D17:10"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0.0
       },
       {
@@ -772,7 +772,7 @@
           "D17:3"
         ],
         "category": 2,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "October 22, 2023",
         "honcho_f1": 0
       },
       {
@@ -782,8 +782,8 @@
           "D17:8"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "Mid-September 2023",
+        "honcho_f1": 0.5
       },
       {
         "question": "When did Melanie's family go on a roadtrip?",
@@ -792,8 +792,8 @@
           "D18:1"
         ],
         "category": 2,
-        "honcho_prediction": "June 1, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "July 2023",
+        "honcho_f1": 0.286
       },
       {
         "question": "How many children does Melanie have?",
@@ -803,7 +803,7 @@
           "D18:7"
         ],
         "category": 1,
-        "honcho_prediction": "Mel has multiple children",
+        "honcho_prediction": "children",
         "honcho_f1": 0.0
       },
       {
@@ -813,7 +813,7 @@
           "D18:17"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0.0
       },
       {
@@ -824,8 +824,8 @@
           "D18:1"
         ],
         "category": 3,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0.4
+        "honcho_prediction": "Melanie enjoys camping trips and outdoor activities with her family",
+        "honcho_f1": 0
       },
       {
         "question": "What items has Melanie bought?",
@@ -835,7 +835,7 @@
           "D7:18"
         ],
         "category": 1,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0.0
       },
       {
@@ -845,8 +845,8 @@
           "D19:1"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
-        "honcho_f1": 0
+        "honcho_prediction": "October 22, 2023",
+        "honcho_f1": 0.75
       },
       {
         "question": "When did Melanie buy the figurines?",
@@ -855,7 +855,7 @@
           "D19:2"
         ],
         "category": 2,
-        "honcho_prediction": "June 5, 2025",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -866,8 +866,8 @@
           "D19:3"
         ],
         "category": 3,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0.5
+        "honcho_prediction": "No indication she wants to move back to her home country soon",
+        "honcho_f1": 0.154
       },
       {
         "question": "What did the charity race raise awareness for?",
@@ -876,7 +876,7 @@
           "D2:2"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -886,7 +886,7 @@
           "D2:3"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -896,8 +896,8 @@
           "D2:5"
         ],
         "category": 4,
-        "honcho_prediction": "Taking care of herself through painting as a way to relax after a long day and going swimming with her kids",
-        "honcho_f1": 0.061
+        "honcho_prediction": "Painting for self-expression and relaxation, running for mental health, and swimming with kids",
+        "honcho_f1": 0.154
       },
       {
         "question": "What are Caroline's plans for the summer?",
@@ -906,7 +906,7 @@
           "D2:8"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "Planning a special summer outing with Melanie and looking forward to a trip with her",
         "honcho_f1": 0
       },
       {
@@ -916,7 +916,7 @@
           "D2:12"
         ],
         "category": 4,
-        "honcho_prediction": "LGBTQ individuals",
+        "honcho_prediction": "LGBTQ+ individuals",
         "honcho_f1": 1.0
       },
       {
@@ -926,8 +926,8 @@
           "D2:12"
         ],
         "category": 4,
-        "honcho_prediction": "chosen because it helps LGBTQ+ folks with adoption",
-        "honcho_f1": 0.25
+        "honcho_prediction": "They valued inclusivity and support for LGBTQ+ individuals",
+        "honcho_f1": 0.667
       },
       {
         "question": "What is Caroline excited about in the adoption process?",
@@ -936,8 +936,8 @@
           "D2:14"
         ],
         "category": 4,
-        "honcho_prediction": "providing a safe and loving home for children who need it",
-        "honcho_f1": 0.375
+        "honcho_prediction": "Creating a family for children through adoption",
+        "honcho_f1": 0.462
       },
       {
         "question": "What does Melanie think about Caroline's decision to adopt?",
@@ -946,7 +946,7 @@
           "D2:15"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -956,7 +956,7 @@
           "D3:16"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -966,8 +966,8 @@
           "D4:3"
         ],
         "category": 4,
-        "honcho_prediction": "love, faith and strength",
-        "honcho_f1": 1.0
+        "honcho_prediction": "No answer found",
+        "honcho_f1": 0
       },
       {
         "question": "What country is Caroline's grandma from?",
@@ -976,7 +976,7 @@
           "D4:3"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -986,7 +986,7 @@
           "D4:3"
         ],
         "category": 4,
-        "honcho_prediction": "a necklace from her grandma in Sweden",
+        "honcho_prediction": "A necklace from her grandmother in Sweden",
         "honcho_f1": 0.286
       },
       {
@@ -996,7 +996,7 @@
           "D4:5"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1006,8 +1006,8 @@
           "D4:8"
         ],
         "category": 4,
-        "honcho_prediction": "explored nature, roasted marshmallows around the campfire and went on a hike",
-        "honcho_f1": 0.875
+        "honcho_prediction": "Roasted marshmallows at the beach",
+        "honcho_f1": 0.364
       },
       {
         "question": "What kind of counseling and mental health services is Caroline interested in pursuing?",
@@ -1016,7 +1016,7 @@
           "D4:13"
         ],
         "category": 4,
-        "honcho_prediction": "Counseling or working in mental health to support those with similar issues",
+        "honcho_prediction": "counseling or working in mental health to support those with similar issues",
         "honcho_f1": 0.417
       },
       {
@@ -1026,8 +1026,8 @@
           "D4:13"
         ],
         "category": 4,
-        "honcho_prediction": "LGBTQ+ counseling workshop",
-        "honcho_f1": 1.0
+        "honcho_prediction": "LGBTQ+ counseling workshop last Friday",
+        "honcho_f1": 0.75
       },
       {
         "question": "What was discussed in the LGBTQ+ counseling workshop?",
@@ -1036,8 +1036,8 @@
           "D4:13"
         ],
         "category": 4,
-        "honcho_prediction": "They talked about different therapeutic methods and how to best work with trans people",
-        "honcho_f1": 0.818
+        "honcho_prediction": "therapeutic methods for working with trans people",
+        "honcho_f1": 0.75
       },
       {
         "question": "What motivated Caroline to pursue counseling?",
@@ -1046,8 +1046,8 @@
           "D4:15"
         ],
         "category": 4,
-        "honcho_prediction": "Her personal experiences with challenges during her transition and seeing others lacking safe environments motivated her to pursue counseling to support those with similar issues",
-        "honcho_f1": 0.229
+        "honcho_prediction": "Her positive experiences with counseling and support groups",
+        "honcho_f1": 0.333
       },
       {
         "question": "What kind of place does Caroline want to create for people?",
@@ -1056,8 +1056,8 @@
           "D4:15"
         ],
         "category": 4,
-        "honcho_prediction": "A safe, inviting place for people to grow",
-        "honcho_f1": 1.0
+        "honcho_prediction": "A safe and inviting space for personal growth",
+        "honcho_f1": 0.462
       },
       {
         "question": "Did Melanie make the black and white bowl in the photo?",
@@ -1066,8 +1066,8 @@
           "D5:8"
         ],
         "category": 4,
-        "honcho_prediction": "Yes, the user made the bowl",
-        "honcho_f1": 0.4
+        "honcho_prediction": "No answer found",
+        "honcho_f1": 0
       },
       {
         "question": "What kind of books does Caroline have in her library?",
@@ -1076,8 +1076,8 @@
           "D6:9"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "Children's books, including classics, stories from different cultures, and educational books",
+        "honcho_f1": 0.842
       },
       {
         "question": "What was Melanie's favorite book from her childhood?",
@@ -1086,8 +1086,8 @@
           "D6:10"
         ],
         "category": 4,
-        "honcho_prediction": "Charlotte's Web",
-        "honcho_f1": 1.0
+        "honcho_prediction": "No answer found",
+        "honcho_f1": 0
       },
       {
         "question": "What book did Caroline recommend to Melanie?",
@@ -1096,7 +1096,7 @@
           "D7:11"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1106,8 +1106,8 @@
           "D7:13"
         ],
         "category": 4,
-        "honcho_prediction": "The importance of self-acceptance and embracing one's identity",
-        "honcho_f1": 0.182
+        "honcho_prediction": "She found it enjoyable",
+        "honcho_f1": 0
       },
       {
         "question": "What are the new shoes that Melanie got used for?",
@@ -1126,8 +1126,8 @@
           "D7:21"
         ],
         "category": 4,
-        "honcho_prediction": "Mel uses running as a method to de-stress and clear her mind",
-        "honcho_f1": 0.667
+        "honcho_prediction": "Improved mental health",
+        "honcho_f1": 0
       },
       {
         "question": "What does Melanie say running has been great for?",
@@ -1136,8 +1136,8 @@
           "D7:24"
         ],
         "category": 4,
-        "honcho_prediction": "mental health and headspace",
-        "honcho_f1": 0.667
+        "honcho_prediction": "mental health",
+        "honcho_f1": 0.8
       },
       {
         "question": "What did Mel and her kids make during the pottery workshop?",
@@ -1146,7 +1146,7 @@
           "D8:2"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1156,7 +1156,7 @@
           "D8:4"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1166,7 +1166,7 @@
           "D8:5"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1176,7 +1176,7 @@
           "D8:6"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1186,7 +1186,7 @@
           "D8:9"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "transgender stories at the LGBTQ support group",
         "honcho_f1": 0
       },
       {
@@ -1196,8 +1196,8 @@
           "D8:11"
         ],
         "category": 4,
-        "honcho_prediction": "Sunflowers mean warmth and happiness",
-        "honcho_f1": 0.667
+        "honcho_prediction": "warmth and happiness",
+        "honcho_f1": 1.0
       },
       {
         "question": "Why are flowers important to Melanie?",
@@ -1206,8 +1206,8 @@
           "D8:12"
         ],
         "category": 4,
-        "honcho_prediction": "Flowers represent growth, beauty and remind her to appreciate the small moments while bringing her joy",
-        "honcho_f1": 0.519
+        "honcho_prediction": "Flowers bring Melanie joy and help her connect with her family through nature",
+        "honcho_f1": 0.16
       },
       {
         "question": "What inspired Caroline's painting for the art show?",
@@ -1216,8 +1216,8 @@
           "D9:16"
         ],
         "category": 4,
-        "honcho_prediction": "A sunset inspired by a beach visit",
-        "honcho_f1": 0.154
+        "honcho_prediction": "Her visit to an LGBTQ center",
+        "honcho_f1": 0.615
       },
       {
         "question": "How often does Melanie go to the beach with her kids?",
@@ -1236,7 +1236,7 @@
           "D10:14"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1246,7 +1246,7 @@
           "D10:18"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1256,8 +1256,8 @@
           "D11:1"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "Melanie celebrated her daughter's birthday with a concert",
+        "honcho_f1": 0.444
       },
       {
         "question": "Who performed at the concert at Melanie's daughter's birthday?",
@@ -1266,7 +1266,7 @@
           "D11:3"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1276,8 +1276,8 @@
           "D12:6"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "To express emotions and create a sense of tranquility and serenity",
+        "honcho_f1": 0.125
       },
       {
         "question": "What pet does Caroline have?",
@@ -1286,7 +1286,7 @@
           "D13:3"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1296,8 +1296,8 @@
           "D13:4"
         ],
         "category": 4,
-        "honcho_prediction": "A dog named Luna and a cat named Oliver",
-        "honcho_f1": 0.444
+        "honcho_prediction": "Oliver (a pet who hid a bone in her slipper)",
+        "honcho_f1": 0
       },
       {
         "question": "Where did Oliver hide his bone once?",
@@ -1306,7 +1306,7 @@
           "D13:6"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1316,8 +1316,8 @@
           "D13:7"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "horseback riding with her father",
+        "honcho_f1": 0.571
       },
       {
         "question": "What did Caroline make for a local church?",
@@ -1326,8 +1326,8 @@
           "D14:17"
         ],
         "category": 4,
-        "honcho_prediction": "a stained glass window",
-        "honcho_f1": 1.0
+        "honcho_prediction": "No answer found",
+        "honcho_f1": 0
       },
       {
         "question": "What did Caroline find in her neighborhood during her walk?",
@@ -1336,7 +1336,7 @@
           "D14:23"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1356,8 +1356,8 @@
           "D15:28"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "Bach and Mozart",
+        "honcho_f1": 1.0
       },
       {
         "question": "Who is Melanie a fan of in terms of modern music?",
@@ -1366,8 +1366,8 @@
           "D15:28"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "Ed Sheeran's 'Perfect'",
+        "honcho_f1": 0.8
       },
       {
         "question": "How long has Melanie been creating art?",
@@ -1376,8 +1376,8 @@
           "D16:7"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "seven years",
+        "honcho_f1": 0.5
       },
       {
         "question": "What precautionary sign did Melanie see at the caf\u00e9?",
@@ -1386,7 +1386,7 @@
           "D16:16"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1396,7 +1396,7 @@
           "D17:7"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1406,7 +1406,7 @@
           "D17:8"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "a setback last month",
         "honcho_f1": 0
       },
       {
@@ -1416,8 +1416,8 @@
           "D17:10"
         ],
         "category": 4,
-        "honcho_prediction": "painting to keep busy",
-        "honcho_f1": 0.286
+        "honcho_prediction": "Melanie plays the clarinet during her pottery break",
+        "honcho_f1": 0
       },
       {
         "question": "What painting did Melanie show to Caroline on October 13, 2023?",
@@ -1426,7 +1426,7 @@
           "D17:12"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1436,7 +1436,7 @@
           "D17:14"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1456,7 +1456,7 @@
           "D17:19"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1466,7 +1466,7 @@
           "D17:23"
         ],
         "category": 4,
-        "honcho_prediction": "A form of self-expression related to her identity",
+        "honcho_prediction": "A symbol of freedom, authenticity, and embracing her womanhood",
         "honcho_f1": 0.167
       },
       {
@@ -1476,7 +1476,7 @@
           "D17:25"
         ],
         "category": 4,
-        "honcho_prediction": "\"a journey of self-acceptance and mutual support\"",
+        "honcho_prediction": "\"a journey of support and shared experiences\"",
         "honcho_f1": 0.2
       },
       {
@@ -1486,7 +1486,7 @@
           "D18:1"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1497,7 +1497,7 @@
           "D18:7"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1507,7 +1507,7 @@
           "D18:5"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1517,7 +1517,7 @@
           "D18:7"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1527,7 +1527,7 @@
           "D18:5"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "No answer found",
         "honcho_f1": 0
       },
       {
@@ -1537,8 +1537,8 @@
           "D18:5"
         ],
         "category": 4,
-        "honcho_prediction": "Melanie said \"Thankfully, they enjoyed the Grand Canyon a lot!\"",
-        "honcho_f1": 0.167
+        "honcho_prediction": "No answer found",
+        "honcho_f1": 0
       },
       {
         "question": "What do Melanie's family give her?",
@@ -1547,8 +1547,8 @@
           "D18:9"
         ],
         "category": 4,
-        "honcho_prediction": "No information available",
-        "honcho_f1": 0
+        "honcho_prediction": "Support and strength",
+        "honcho_f1": 0.5
       },
       {
         "question": "How did Melanie feel about her family supporting her?",
@@ -1557,7 +1557,7 @@
           "D18:13"
         ],
         "category": 4,
-        "honcho_prediction": "\"their love and support really helped me through tough times\"",
+        "honcho_prediction": "Melanie feels grateful for her family's love and support during tough times, and they give her strength.",
         "honcho_f1": 0
       },
       {
@@ -1567,8 +1567,8 @@
           "D18:17"
         ],
         "category": 4,
-        "honcho_prediction": "took a swim",
-        "honcho_f1": 0
+        "honcho_prediction": "Went camping",
+        "honcho_f1": 0.25
       },
       {
         "question": "What did Caroline realize after her charity race?",
@@ -1687,9 +1687,9 @@
         ],
         "category": 5,
         "adversarial_answer": "explored nature, roasted marshmallows, and went on a hike",
-        "honcho_prediction": "Not mentioned in the conversation",
+        "honcho_prediction": "Empty response",
         "answer": "explored nature, roasted marshmallows, and went on a hike",
-        "honcho_f1": 1
+        "honcho_f1": 0
       },
       {
         "question": "What kind of counseling and mental health services is Melanie interested in pursuing?",
@@ -1720,9 +1720,9 @@
         ],
         "category": 5,
         "adversarial_answer": "her own journey and the support she received, and how counseling improved her life",
-        "honcho_prediction": "Not mentioned in the conversation",
+        "honcho_prediction": "Empty response",
         "answer": "her own journey and the support she received, and how counseling improved her life",
-        "honcho_f1": 1
+        "honcho_f1": 0
       },
       {
         "question": "What kind of place does Melanie want to create for people?",
@@ -1775,9 +1775,9 @@
         ],
         "category": 5,
         "adversarial_answer": "Her mental health",
-        "honcho_prediction": "Not mentioned in the conversation",
+        "honcho_prediction": "Her mental health",
         "answer": "Her mental health",
-        "honcho_f1": 1
+        "honcho_f1": 0
       },
       {
         "question": "What did Melanie see at the council meeting for adoption?",
@@ -1808,9 +1808,9 @@
         ],
         "category": 5,
         "adversarial_answer": "visiting an LGBTQ center and wanting to capture unity and strength",
-        "honcho_prediction": "Not mentioned in the conversation",
+        "honcho_prediction": "visiting an LGBTQ center and wanting to capture unity and strength",
         "answer": "visiting an LGBTQ center and wanting to capture unity and strength",
-        "honcho_f1": 1
+        "honcho_f1": 0
       },
       {
         "question": "How often does Caroline go to the beach with her kids?",
@@ -1841,7 +1841,7 @@
         ],
         "category": 5,
         "adversarial_answer": "in awe of the universe",
-        "honcho_prediction": "No information available",
+        "honcho_prediction": "Not mentioned in the conversation",
         "answer": "in awe of the universe",
         "honcho_f1": 1
       },
@@ -1995,9 +1995,9 @@
         ],
         "category": 5,
         "adversarial_answer": "It was a transgender poetry reading where transgender people shared their stories.",
-        "honcho_prediction": "It was a transgender poetry reading where transgender people shared their stories.",
+        "honcho_prediction": "Not mentioned in the conversation",
         "answer": "It was a transgender poetry reading where transgender people shared their stories.",
-        "honcho_f1": 0
+        "honcho_f1": 1
       },
       {
         "question": "What happened to Caroline's son on their road trip?",
@@ -2029,9 +2029,9 @@
         ],
         "category": 5,
         "adversarial_answer": "They are important and mean the world to her",
-        "honcho_prediction": "Not mentioned in the conversation",
+        "honcho_prediction": "They are important and mean the world to her",
         "answer": "They are important and mean the world to her",
-        "honcho_f1": 1
+        "honcho_f1": 0
       },
       {
         "question": "How did Caroline's children handle the accident?",
