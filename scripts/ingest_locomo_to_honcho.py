@@ -141,7 +141,8 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                 "dia_id": dia_id,
                 "original_session": session_num,
                 "session_timestamp": created_at_ts.isoformat(),
-                "original_speaker": speaker
+                "original_speaker": speaker,
+                "created_at": created_at_ts.isoformat()  # Store timestamp in metadata instead
             }
             
             # Add image info if present
@@ -159,8 +160,7 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                     session_id=session_a.id,
                     content=text,
                     is_user=True,
-                    metadata=metadata,
-                    created_at=created_at_ts
+                    metadata=metadata
                 )
                 # A's message as assistant in B's session
                 honcho.apps.users.sessions.messages.create(
@@ -169,8 +169,7 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                     session_id=session_b.id,
                     content=text,
                     is_user=False,
-                    metadata=metadata,
-                    created_at=created_at_ts
+                    metadata=metadata
                 )
             else:  # speaker == speaker_b
                 # B's message as user
@@ -180,8 +179,7 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                     session_id=session_b.id,
                     content=text,
                     is_user=True,
-                    metadata=metadata,
-                    created_at=created_at_ts
+                    metadata=metadata
                 )
                 # B's message as assistant in A's session
                 honcho.apps.users.sessions.messages.create(
@@ -190,8 +188,7 @@ def ingest_conversation(honcho: Honcho, sample: Dict[str, Any]) -> Dict[str, Any
                     session_id=session_a.id,
                     content=text,
                     is_user=False,
-                    metadata=metadata,
-                    created_at=created_at_ts
+                    metadata=metadata
                 )
         
         print(f"    Processed {len(session_data)} messages")
