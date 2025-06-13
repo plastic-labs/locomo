@@ -171,7 +171,7 @@ def eval_recall(infile):
     has_answer_count = 0
     answer_lengths = []
     for line in lines:
-        line = json.loads(line)
+        line = json.loads(line)  # type: ignore[arg-type]
         answer = line['answer']
         output = ' || '.join(line['output'])
 
@@ -186,7 +186,7 @@ def eval_recall(infile):
     return recall, lens
 
 
-def eval_question_answering(qas, eval_key='prediction', metric='f1'):
+def rule_based_eval_question_answering(qas, eval_key='prediction', metric='f1'):
 
     all_ems = []
     all_recall = []
@@ -277,7 +277,7 @@ def eval_fact_checking(infile):
     exact_match_count = 0
     answer_lengths = []
     for line in lines:
-        line = json.loads(line)
+        line = json.loads(line)  # type: ignore[arg-type]
         answer = line['answer']
         output = line['output'][0]
 
@@ -305,7 +305,7 @@ def eval_dialogue_system(infile):
     rl_scores = []
     answer_lengths = []
     for line in lines:
-        line = json.loads(line)
+        line = json.loads(line)  # type: ignore[arg-type]
         answer = line['answer']
         output = line['output'][0]
 
@@ -318,4 +318,168 @@ def eval_dialogue_system(infile):
     lens = round(np.mean(answer_lengths), 4)
 
     return F1, RL, lens
+
+
+# ==========================================================
+#  LLM-as-Judge scoring
+#
+#  Uses an LLM (default GPT-4o) to grade the generated answer
+#  CORRECT / WRONG based on the prompt from mem0 paper.
+#  – Caches scores by writing them back onto the QA dict under
+#    `{model_key}_f1`, so the evaluation script can skip them
+#    next time it runs.
+#  – Skips category 5 (adversarial yes/no) and applies the
+#    simple heuristic as in the rule-based version.
+# ==========================================================
+
+import os, json, time, re
+
+try:
+    import openai
+    from dotenv import load_dotenv
+    load_dotenv(override=True)
+    openai.api_key = os.environ["OPENAI_API_KEY"]
+except ImportError:
+    openai = None  # openai might not be available in some environments
+
+
+def _call_openai_chat(prompt: str, model: str = "gpt-4o-mini", max_retries: int = 5, backoff_base: float = 1.5):
+    """Call OpenAI ChatCompletion with retry/back-off."""
+    if openai is None:
+        raise RuntimeError("openai python package is not installed – required for LLM-as-judge scoring")
+
+    wait = 1.0
+    for attempt in range(max_retries):
+        try:
+            response = openai.ChatCompletion.create(  # type: ignore
+                model=model,
+                temperature=0.0,
+                max_tokens=256,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            return response["choices"][0]["message"]["content"].strip()  # type: ignore[index]
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise
+            time.sleep(wait)
+            wait *= backoff_base
+
+
+_LLM_JUDGE_PROMPT_TEMPLATE = (
+    "Your task is to label an answer to a question as \"CORRECT\" or \"WRONG\". "
+    "You will be given the following data: (1) a question (posed by one user to another user), "
+    "(2) a 'gold' (ground truth) answer, (3) a generated answer which you will score as CORRECT/WRONG.\n"
+    "The point of the question is to ask about something one user should know about the other user based on their prior conversations. "
+    "The gold answer will usually be a concise and short answer that includes the referenced topic.\n"
+    "For time related questions, the gold answer will be a specific date, month, year, etc. "
+    "The generated answer might be much longer or use relative time references (like 'last Tuesday' or 'next month'), "
+    "but you should be generous with your grading – as long as it refers to the same date or time period as the gold answer, it should be counted as CORRECT.\n"
+    "Now it's time for the real question:\n"
+    "Question: {question}\n"
+    "Gold answer: {gold_answer}\n"
+    "Generated answer: {generated_answer}\n"
+    "First, provide a short (one sentence) explanation of your reasoning, then finish with CORRECT or WRONG. "
+    "Do NOT include both CORRECT and WRONG in your response, or it will break the evaluation script.\n"
+    "Just return the label CORRECT or WRONG in a json format with the key as \"label\"."
+)
+
+
+def _extract_label_from_response(text) -> str:
+    """Return upper-case 'CORRECT' or 'WRONG' string from LLM response."""
+    text = str(text)
+    try:
+        j = json.loads(text)  # type: ignore[arg-type]
+        label = j.get("label", "").strip().upper()
+        if label in {"CORRECT", "WRONG"}:
+            return label
+    except json.JSONDecodeError:
+        pass
+    # Fallback: regex search
+    match = re.search(r"CORRECT|WRONG", text, re.IGNORECASE)  # type: ignore[arg-type]
+    if match:
+        return match.group(0).upper()
+    return "WRONG"  # safe default
+
+
+def llm_as_judge_eval_question_answering(
+    qas,
+    eval_key: str = "prediction",
+    model_key: str | None = None,
+    openai_model: str = "gpt-4o-mini",
+    override_cached: bool = False,
+):
+    """Evaluate QA using an LLM judge.
+
+    Parameters
+    ----------
+    qas : list[dict]
+        QA entries (modified in-place to cache scores).
+    eval_key : str
+        Key containing the generated answer.
+    model_key : str | None
+        Model identifier used for caching (e.g. 'honcho'). If provided, the
+        cached score will be written/read from `{model_key}_f1`.
+    openai_model : str
+        Which OpenAI model to use.
+    """
+
+    # Ensure OpenAI key set
+    if openai is not None and not hasattr(openai, "api_key"):
+        if os.getenv("OPENAI_API_KEY"):
+            openai.api_key = os.environ["OPENAI_API_KEY"]
+
+    all_scores = []
+    all_recall = []
+
+    score_field = f"{model_key}_llm" if model_key else "llm_judge"
+
+    print(f"[LLM-JUDGE] Starting evaluation with cache field '{score_field}' on {len(qas)} questions")
+
+    for idx, qa in enumerate(qas):
+        # Skip if missing prediction
+        if eval_key not in qa:
+            continue
+
+        # Use cached value if present
+        if score_field in qa and not override_cached:
+            print(f"[LLM-JUDGE] Using cached score for QA {idx}")
+            all_scores.append(qa[score_field])
+            all_recall.append(1)
+            continue
+        elif score_field in qa and override_cached:
+            print(f"[LLM-JUDGE] Overriding cached score for QA {idx}")
+
+        category = qa.get("category", 0)
+        generated = str(qa[eval_key]).strip()
+
+        # Fallback for empty generations
+        if not generated:
+            generated = "No answer found"
+
+        if category == 5:
+            # Use simple heuristic from rule-based version
+            score = 1 if ("no information available" in generated.lower() or "not mentioned" in generated.lower()) else 0
+        else:
+            prompt = _LLM_JUDGE_PROMPT_TEMPLATE.format(
+                question=qa.get("question", ""),
+                gold_answer=str(qa.get("answer", "")),
+                generated_answer=generated,
+            )
+
+            try:
+                print(f"[LLM-JUDGE] Calling OpenAI for QA {idx}...")
+                response_text = _call_openai_chat(prompt, model=openai_model)
+                label = _extract_label_from_response(response_text)
+                score = 1 if label == "CORRECT" else 0
+            except Exception as e:
+                # Propagate error after exhausting retries
+                raise RuntimeError(f"LLM judge failed on QA index {idx}: {e}") from e
+
+        # Cache on QA dict
+        qa[score_field] = score
+        all_scores.append(score)
+        all_recall.append(1)
+
+    lens = 0.0
+    return all_scores, lens, all_recall
 

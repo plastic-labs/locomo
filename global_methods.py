@@ -8,6 +8,9 @@ import os
 import google.generativeai as genai
 from anthropic import Anthropic
 
+from dotenv import load_dotenv
+load_dotenv()
+
 
 
 def get_openai_embedding(texts, model="text-embedding-ada-002"):
