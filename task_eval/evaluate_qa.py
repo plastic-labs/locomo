@@ -7,7 +7,7 @@ from tqdm import tqdm
 import argparse
 import time  # Add for timing
 from global_methods import set_openai_key, set_anthropic_key, set_gemini_key
-from task_eval.evaluation import eval_question_answering
+from task_eval.evaluation import rule_based_eval_question_answering, llm_as_judge_eval_question_answering
 from task_eval.evaluation_stats import analyze_aggr_acc
 from task_eval.gpt_utils import get_gpt_answers
 from task_eval.claude_utils import get_claude_answers
@@ -32,6 +32,10 @@ def parse_args():
     parser.add_argument('--top-k', type=int, default=5)
     parser.add_argument('--retriever', type=str, default="contriever")
     parser.add_argument('--overwrite', action="store_true")
+    parser.add_argument('--scoring-modes', nargs='+', default=['f1'], choices=['f1', 'llm'],
+                        help='Space-separated list of scoring modes to run (f1, llm)')
+    parser.add_argument('--override-cached-scores', action='store_true',
+                        help='Force re-grading by LLM even if cached scores exist')
     args = parser.parse_args()
     return args
 
@@ -207,9 +211,30 @@ def main():
         print(f"[DEBUG] Got answers in {answer_time:.2f} seconds")
 
         # evaluate individual QA samples and save the score
-        print(f"[DEBUG] Evaluating question-answering results...")
+        print(f"[DEBUG] Evaluating question-answering results using modes {args.scoring_modes} ...")
         eval_start = time.time()
-        exact_matches, lengths, recall = eval_question_answering(answers['qa'], prediction_key)
+
+        all_exact = []
+        # Run F1 scoring if requested
+        if 'f1' in args.scoring_modes:
+            print("[DEBUG] Computing rule-based F1 scores ...")
+            exact_f1, _, _ = rule_based_eval_question_answering(answers['qa'], prediction_key)
+            all_exact.append(('f1', exact_f1))
+
+        # Run LLM judge if requested
+        if 'llm' in args.scoring_modes:
+            print("[DEBUG] Computing LLM-as-judge scores ...")
+            set_openai_key()
+            exact_llm, _, _ = llm_as_judge_eval_question_answering(
+                answers['qa'], prediction_key, model_key,
+                override_cached=args.override_cached_scores
+            )
+            all_exact.append(('llm', exact_llm))
+
+        # For backwards compatibility, keep `exact_matches` equal to first mode selected
+        exact_matches = all_exact[0][1]
+        lengths = 0.0
+        recall = [1]*len(exact_matches)
         eval_time = time.time() - eval_start
         print(f"[DEBUG] Evaluation completed in {eval_time:.2f} seconds")
         
@@ -235,20 +260,32 @@ def main():
 
         out_samples[data['sample_id']] = answers
         
+        # Persist progress after each sample so we can resume safely
+        try:
+            with open(args.out_file, 'w') as f:
+                json.dump(list(out_samples.values()), f, indent=2)
+        except Exception as e:
+            print(f"[DEBUG] Failed to write interim results for sample {data['sample_id']}: {e}")
+        
         sample_time = time.time() - sample_start
         print(f"[DEBUG] Sample {data['sample_id']} completed in {sample_time:.2f} seconds")
 
-    print(f"[DEBUG] Writing results to output file...")
-    write_start = time.time()
-    with open(args.out_file, 'w') as f:
-        json.dump(list(out_samples.values()), f, indent=2)
-    write_time = time.time() - write_start
-    print(f"[DEBUG] Results written in {write_time:.2f} seconds")
-
     print(f"[DEBUG] Running aggregate accuracy analysis...")
     analysis_start = time.time()
-    analyze_aggr_acc(args.data_file, args.out_file, args.out_file.replace('.json', '_stats.json'),
-                model_key, model_key + '_f1', rag=args.use_rag)
+
+    if 'f1' in args.scoring_modes:
+        analyze_aggr_acc(
+            args.data_file, args.out_file,
+            args.out_file.replace('.json', '_f1_stats.json'),
+            model_key, model_key + '_f1', rag=args.use_rag
+        )
+    if 'llm' in args.scoring_modes:
+        analyze_aggr_acc(
+            args.data_file, args.out_file,
+            args.out_file.replace('.json', '_llm_stats.json'),
+            model_key, model_key + '_llm', rag=args.use_rag
+        )
+
     analysis_time = time.time() - analysis_start
     print(f"[DEBUG] Analysis completed in {analysis_time:.2f} seconds")
     
