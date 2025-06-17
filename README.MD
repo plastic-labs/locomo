@@ -113,3 +113,231 @@ Please cite our paper if you use LoCoMo in your works:
   year={2024}
 }
 ```
+
+# LOCOMO Dataset Explorer & Subsetter
+
+A comprehensive tool for exploring and intelligently subsetting the LOCOMO dataset for long-term memory evaluation experiments.
+
+## What is this tool?
+
+The LOCOMO dataset contains 10 multi-session conversations between different speaker pairs, with 199 questions per conversation testing various aspects of long-term memory. This tool helps you:
+
+1. **Explore** the dataset to understand conversation structure, question distribution, and temporal relationships
+2. **Subset** the data intelligently by preserving temporal context needed for accurate memory evaluation
+
+## Why do we need this?
+
+The LOCOMO dataset is large and complex. When testing memory models, you need:
+
+- **Temporal context**: All prior conversation history up to a specific point
+- **Category filtering**: Focus on specific types of reasoning (multi-hop, temporal, etc.)
+- **Efficient exploration**: Understand the data before committing to experiments
+
+Manual subsetting would be error-prone and miss crucial temporal dependencies.
+
+## Quick Start
+
+### 1. List all available conversations
+```bash
+python3 locomo_tool.py explore --list-conversations
+```
+**Output:**
+```
+Available Conversations:
+==================================================
+ 0: Caroline ↔ Melanie
+ 1: Jon ↔ Gina
+ 2: John ↔ Maria
+ 3: Joanna ↔ Nate
+ 4: Tim ↔ John
+ 5: Audrey ↔ Andrew
+ 6: James ↔ John
+ 7: Deborah ↔ Jolene
+ 8: Evan ↔ Sam
+ 9: Calvin ↔ Dave
+```
+
+### 2. Deep dive into a conversation
+```bash
+python3 locomo_tool.py explore --conversation 0
+```
+**Shows you:**
+- Session timeline with message counts
+- Question distribution by category
+- Category breakdown per session
+- Sample questions from each category
+
+### 3. Preview a subset before creating it
+```bash
+python3 locomo_tool.py explore --conversation 0 --category 1 --n 10 --preview
+```
+**Shows you:**
+- Which questions would be selected
+- How much conversation history would be included
+- Total message count in the resulting subset
+
+### 4. Create an actual subset for your experiment
+```bash
+python3 locomo_tool.py subset --conversation 0 --category 1 --n 10 --output my_experiment.json
+```
+**Creates:** A clean JSON file ready for ingestion into your memory evaluation pipeline.
+
+## Understanding Categories
+
+Based on the evaluation logic in `task_eval/evaluation.py`, the categories represent:
+
+- **Category 1**: **Multi-hop reasoning** - Complex questions requiring synthesis across multiple conversation points, evaluated with sub-answer splitting and partial F1 scoring
+- **Category 2**: **Single-hop reasoning** - Direct factual recall questions, evaluated with standard F1 scoring  
+- **Category 3**: **Temporal reasoning** - Time-related questions, evaluated with standard F1 scoring (answers may contain semicolon-separated alternatives)
+- **Category 4**: **Open-domain reasoning** - General knowledge questions within conversational context, evaluated with standard F1 scoring
+- **Category 5**: **Adversarial questions** - Questions designed to test information boundaries, where correct answer is "no information available" or "not mentioned"
+
+## How Temporal Subsetting Works
+
+**The Problem**: Questions reference evidence like `["D2:8", "D4:13"]`, meaning they depend on information from session 2, message 8 AND session 4, message 13.
+
+**The Solution**: 
+1. Find the "latest" evidence across your selected questions (e.g., `D4:13`)
+2. Include ALL conversation content from session 1 up through that point
+3. This preserves the full temporal context needed for accurate evaluation
+
+**Example**: If you select 5 questions from category 1, and the latest evidence is `D4:13`, you get:
+- All of sessions 1, 2, and 3
+- Messages 1-13 from session 4
+- Total: ~71 messages of context
+
+## Common Workflows
+
+### Workflow 1: Explore then Experiment
+```bash
+# 1. See what's available
+python3 locomo_tool.py explore --list-conversations
+
+# 2. Pick a conversation and understand it
+python3 locomo_tool.py explore --conversation 0
+
+# 3. Preview your experiment
+python3 locomo_tool.py explore --conversation 0 --category 1 --n 10 --preview
+
+# 4. Create the subset
+python3 locomo_tool.py subset --conversation 0 --category 1 --n 10 --output experiment_cat1.json
+```
+
+### Workflow 2: Quick Category Comparison
+```bash
+# Compare different categories in the same conversation
+python3 locomo_tool.py explore --conversation 0 --category 1 --n 5 --preview
+python3 locomo_tool.py explore --conversation 0 --category 2 --n 5 --preview
+python3 locomo_tool.py explore --conversation 0 --category 3 --n 5 --preview
+```
+
+### Workflow 3: Multi-Conversation Study
+```bash
+# Create subsets from different conversations for comparison
+python3 locomo_tool.py subset --conversation 0 --category 1 --n 10 --output caroline_melanie.json
+python3 locomo_tool.py subset --conversation 1 --category 1 --n 10 --output jon_gina.json
+python3 locomo_tool.py subset --conversation 2 --category 1 --n 10 --output john_maria.json
+```
+
+## Command Reference
+
+### Explore Mode
+```bash
+python3 locomo_tool.py explore [OPTIONS]
+```
+
+**Options:**
+- `--list-conversations`: Show all 10 speaker pairs
+- `--conversation N`: Analyze conversation N (0-9)
+- `--category N`: Specify category for preview
+- `--n N`: Number of questions (default: 10)
+- `--preview`: Preview subset (requires --conversation and --category)
+- `--data PATH`: Custom dataset path (default: data/locomo10.json)
+
+### Subset Mode
+```bash
+python3 locomo_tool.py subset --conversation N --category N --n N --output FILE
+```
+
+**Required:**
+- `--conversation N`: Which conversation (0-9)
+- `--category N`: Which category to filter by
+- `--output FILE`: Where to save the subset
+
+**Optional:**
+- `--n N`: Number of questions (default: 10)
+- `--data PATH`: Custom dataset path
+
+## Output Format
+
+When you create a subset, you get a JSON file with:
+
+```json
+{
+  "qa": [...],                    // Selected questions
+  "conversation": {               // Temporal conversation subset
+    "speaker_a": "Caroline",
+    "speaker_b": "Melanie",
+    "session_1": [...],          // All messages from included sessions
+    "session_1_date_time": "...",
+    // ... more sessions as needed
+  },
+  "subset_info": {               // Metadata about the subset
+    "original_conversation": 0,
+    "category": 1,
+    "questions_requested": 10,
+    "questions_found": 10,
+    "max_evidence": "D4:13",
+    "sessions_included": [1, 2, 3, 4],
+    "total_messages_included": 71
+  }
+}
+```
+
+## Tips & Best Practices
+
+### 🔍 **Always preview first**
+Use `--preview` to understand what you're getting before creating large subsets.
+
+### 📊 **Understand the data distribution**
+Run conversation analysis to see how questions are distributed across sessions and categories.
+
+### 🎯 **Start small**
+Begin with `--n 5` to get a feel for the data, then scale up.
+
+### 📝 **Document your experiments**
+The `subset_info` field contains metadata about exactly what was included - save this for reproducibility.
+
+### ⚡ **Efficient exploration**
+The tool lazy-loads data and caches conversation info, so multiple explores on the same data are fast.
+
+## Troubleshooting
+
+**Error: "No questions found for category X"**
+- Check which categories exist in your chosen conversation
+- Use `python3 locomo_tool.py explore --conversation N` to see available categories
+
+**Error: "Conversation index X out of range"**
+- Valid conversation indices are 0-9
+- Use `--list-conversations` to see available options
+
+**Large file sizes**
+- The original dataset is 2MB+, subsets will be smaller but still substantial
+- Use smaller `--n` values if you need smaller files
+
+## Architecture Notes
+
+The tool is built with three main components:
+
+- **`EvidenceRef`**: Parses and sorts evidence references (D2:8 format)
+- **`LocomoDataset`**: Handles data loading, analysis, and subsetting logic  
+- **`LocomoExplorer`**: Provides user-friendly exploration interfaces
+
+Key design principles:
+- **DRY**: No code duplication across exploration and subsetting
+- **Efficient**: Lazy loading and caching for large datasets
+- **Temporal accuracy**: Preserves conversation context for valid memory evaluation
+
+---
+
+**Questions?** The tool has comprehensive `--help` for each mode, or check the source code for implementation details.
