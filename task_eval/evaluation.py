@@ -237,7 +237,7 @@ def rule_based_eval_question_answering(qas, eval_key='prediction', metric='f1'):
 
         # adversarial eval --> check for selection of correct option
         elif line['category'] in [5]:
-            if 'no information available' in output.lower() or 'not mentioned' in output.lower():
+            if 'no information available' in output.lower() or 'not mentioned' in output.lower() or 'no mention' in output.lower():
                 all_ems.append(1)
             else:
                 all_ems.append(0)
@@ -458,7 +458,7 @@ def llm_as_judge_eval_question_answering(
 
         if category == 5:
             # Use simple heuristic from rule-based version
-            score = 1 if ("no information available" in generated.lower() or "not mentioned" in generated.lower()) else 0
+            score = 1 if ("no information available" in generated.lower() or "not mentioned" in generated.lower() or "no mention" in generated.lower()) else 0
         else:
             prompt = _LLM_JUDGE_PROMPT_TEMPLATE.format(
                 question=qa.get("question", ""),

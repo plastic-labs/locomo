@@ -189,6 +189,7 @@ def process_single_question(honcho: Honcho, app_id: str, speakers: Dict[str, str
                 queries=prompt
             )
             
+            print(response)
             api_time = time.time() - api_start
             print(f"[HONCHO DEBUG] Dialectic API call completed in {api_time:.2f} seconds")
             
@@ -252,6 +253,7 @@ def process_single_question(honcho: Honcho, app_id: str, speakers: Dict[str, str
                 if category == 5:
                     return "Empty response"
                 else:
+                    print(e)
                     return "No answer found"
             
             # Calculate delay for retry (exponential backoff with jitter)
