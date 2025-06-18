@@ -20,12 +20,13 @@ from tqdm import tqdm
 import argparse
 
 # Add parent directory to path to import Honcho
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from honcho import Honcho
 
 # Configuration
-HONCHO_BASE_URL = "http://localhost:8000"
+HONCHO_PORT = os.environ.get("HONCHO_PORT", "8000")
+HONCHO_BASE_URL = f"http://localhost:{HONCHO_PORT}"
+print(f"Using Honcho at {HONCHO_BASE_URL}")
 HONCHO_ENVIRONMENT = os.environ.get("HONCHO_ENVIRONMENT", "local")
 # LOCOMO_DATA_FILE = "data/locomo10.json"
 DEFAULT_DATA_FILE = "data/conv-26_only.json"

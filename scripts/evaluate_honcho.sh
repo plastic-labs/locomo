@@ -2,11 +2,13 @@
 # sets necessary environment variables
 source scripts/env.sh
 
-export HONCHO_BASE_URL=http://localhost:8000
+# Allow overriding the backend port via $HONCHO_PORT (defaults to 8000)
+HONCHO_PORT=${HONCHO_PORT:-8000}
+export HONCHO_BASE_URL="http://localhost:${HONCHO_PORT}"
 export HONCHO_ENVIRONMENT=local
 export DATA_FILE_PATH=data/conv-26_only.json
 # export DATA_FILE_PATH=data/locomo10.json
-export OUT_DIR=results/dia_conv_26_baseline
+export OUT_DIR=results/baseline_sonnet
 
 # Evaluate Honcho
 python3 task_eval/evaluate_qa.py \

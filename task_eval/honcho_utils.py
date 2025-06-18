@@ -287,20 +287,11 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
     client_time = time.time() - client_start
     print(f"[HONCHO DEBUG] Honcho client initialized in {client_time:.2f} seconds")
     
-    # Load mappings
-    mappings = load_honcho_mappings()
-    mapping_dict = {m['sample_id']: m for m in mappings}
-    
-    # Get mapping for this sample
-    sample_id = in_data['sample_id']
-    print(f"[HONCHO DEBUG] Looking up mapping for sample: {sample_id}")
-    if sample_id not in mapping_dict:
-        raise ValueError(f"Sample {sample_id} not found in Honcho mappings")
-    
-    mapping = mapping_dict[sample_id]
-    app_id = mapping['app_id']
-    speakers = mapping['users']
-    print(f"[HONCHO DEBUG] Found mapping - App ID: {app_id}, Speakers: {list(speakers.keys())}")
+    # Dynamically discover app and speaker mappings from backend
+    app_id, speakers = get_default_app_and_speakers(honcho)
+
+    # Keep sample_id for progress file naming, fall back to a default value if absent
+    sample_id = in_data.get('sample_id', 'default')
     
     # Prepare list of question indices that still need predictions.
     questions_to_process: list[int] = [
@@ -426,3 +417,34 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
         print(f"[HONCHO DEBUG] SUCCESS: All {len(out_data['qa'])} questions now have 'answer' field")
     
     return out_data 
+
+# ------------------------------------------------------------------
+# Backend discovery helpers (replace static mapping file)
+# ------------------------------------------------------------------
+
+def get_default_app_and_speakers(honcho: Honcho) -> tuple[str, Dict[str, str]]:
+    """Return the first app's id and a mapping of speaker names → user ids.
+
+    The Honcho backend is expected to contain a single app with all the users we
+    need. We query the backend instead of relying on a local mappings file that
+    might be stale or missing.
+    """
+    print("[HONCHO DEBUG] Fetching default app and speaker mappings from backend…")
+
+    # Fetch the list of apps (assume at least one exists)
+    apps_response = honcho.apps.list()
+    if not hasattr(apps_response, "items") or len(apps_response.items) == 0:
+        raise ValueError("No apps found in Honcho backend — cannot continue")
+
+    app = apps_response.items[0]
+    app_id = app.id
+
+    # Fetch all users for this app and build name → id mapping
+    users_response = honcho.apps.users.list(app_id=app_id)
+    speakers = {user.name: user.id for user in getattr(users_response, "items", [])}
+
+    if not speakers:
+        raise ValueError(f"No users found for app {app_id} — cannot build speaker mapping")
+
+    print(f"[HONCHO DEBUG] Retrieved app {app_id} with speakers: {list(speakers.keys())}")
+    return app_id, speakers 
