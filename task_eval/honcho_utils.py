@@ -12,6 +12,12 @@ from honcho import Honcho
 from typing import Dict, List, Any
 from dotenv import load_dotenv
 import random
+from datetime import datetime
+# Langfuse SDK (optional during CI/lint)
+try:
+    from langfuse import Langfuse  # type: ignore
+except ModuleNotFoundError:  # pragma: no cover – allows linting without Langfuse installed
+    Langfuse = None  # type: ignore
 
 load_dotenv()
 
@@ -46,6 +52,36 @@ QA_PROMPT_BATCH = """
 Based on the above conversations, write short answers for each of the following questions in a few words. Write the answers in the form of a json dictionary where each entry contains the string format of question number as 'key' and the short answer as value. Use single-quote characters for named entities. Answer with exact words from the conversations whenever possible.
 
 """
+
+# ------------------------------------------------------------------
+# Langfuse session / run setup (client-side tracing for each LoCoMo QA
+# ------------------------------------------------------------------
+
+# A human-readable tag for this evaluation run – must be supplied by caller
+# (evaluate_honcho.sh sets it) but we fall back to a generic name when absent.
+RUN_NAME: str = os.environ.get("RUN_NAME", "honcho_eval")
+
+# We keep one Langfuse client for the whole script instance.  The session_id is
+# deterministic for a given RUN_NAME & start-time so that all per-question
+# traces live inside the same Langfuse session.
+
+_EVAL_START_TS = datetime.now().strftime("%Y%m%d_%H%M")
+SESSION_ID: str = os.environ.get("LANGFUSE_SESSION_ID", f"{RUN_NAME}_{_EVAL_START_TS}")
+
+if Langfuse is not None:
+    langfuse_client = Langfuse()
+else:  # Fallback stub so code doesn't crash in environments without Langfuse
+    class _DummyTrace:  # type: ignore
+        def __getattr__(self, _name):
+            def _noop(*_a, **_kw):
+                return None
+            return _noop
+
+    class _DummyClient:  # type: ignore
+        def trace(self, *_, **__):
+            return _DummyTrace()
+
+    langfuse_client = _DummyClient()
 
 # ------------------------------------------------------------------
 # Helper for Category-5 (adversarial) answer mapping
@@ -283,14 +319,27 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
     client_start = time.time()
     honcho = Honcho(
         base_url=HONCHO_BASE_URL,
-        environment=HONCHO_ENVIRONMENT,
-        timeout=300
+        environment=HONCHO_ENVIRONMENT,  # type: ignore[arg-type]
+        timeout=300,
     )
     client_time = time.time() - client_start
     print(f"[HONCHO DEBUG] Honcho client initialized in {client_time:.2f} seconds")
     
     # Dynamically discover app and speaker mappings from backend
     app_id, speakers = get_default_app_and_speakers(honcho)
+
+    # ------------------------------------------------------------------
+    # Pre-compute a lookup {dia_id -> "Speaker: text"} so we can materialise
+    # evidence lines for every question.
+    # ------------------------------------------------------------------
+    dia_lookup: dict[str, str] = {}
+    conv = in_data.get("conversation", {})
+    for key, session in conv.items():
+        if key.startswith("session_") and isinstance(session, list):
+            for msg in session:
+                dia_id = msg.get("dia_id")
+                if dia_id:
+                    dia_lookup[dia_id] = f"{msg.get('speaker')}: {msg.get('text')}"
 
     # Keep sample_id for progress file naming, fall back to a default value if absent
     sample_id = in_data.get('sample_id', 'default')
@@ -305,6 +354,9 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
     # Process questions in batches
     total_questions = len(in_data['qa'])
     questions_processed = 0
+    
+    # Map question-idx -> Langfuse trace so we can attach scores later
+    idx_to_trace: dict[int, object] = {}
     
     # Only iterate over the limited set prepared above
     for batch_start_idx in tqdm(range(0, len(questions_to_process), args.batch_size), desc='Generating answers'):
@@ -358,8 +410,56 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
             else:
                 answer_key = None
             
-            # Get answer from Honcho
-            raw_answer = process_single_question(honcho, app_id, speakers, question, category)
+            # Create the final prompt (short-answer vs multiple-choice)
+            if category == 5:
+                prompt = QA_PROMPT_CAT_5.format(question)
+            else:
+                prompt = QA_PROMPT.format(question)
+            
+            # ------------------------------------------------------------------
+            # Langfuse trace (+ evidence attachment)
+            # 1. Ensure `prompt` already defined (comes from category logic above)
+            # 2. Create trace & metadata message so backend can enrich it
+            # ------------------------------------------------------------------
+
+            evidence_ids: list[str] = qa.get('evidence', [])
+            evidence_text: list[str] = [
+                f"- {eid}: {dia_lookup.get(eid, 'NOT FOUND')}" for eid in evidence_ids
+            ]
+
+            trace = langfuse_client.trace(
+                name="locomo_qa",
+                user_id="locomo",
+                session_id=SESSION_ID,
+                metadata={
+                    "run_name": RUN_NAME,
+                    "question": qa['question'],
+                    "category": category,
+                    "ground_truth": qa.get('answer') or qa.get('adversarial_answer'),
+                    "evidence_ids": evidence_ids,
+                    "evidence": evidence_text,
+                },
+            )
+
+            # Identify target user & session so we can post the metadata-bearing message
+            speaker_name, user_id = identify_target_user(question, speakers)
+            session_id = get_session_for_question(honcho, app_id, user_id, question)
+
+            meta_payload = {
+                "langfuse_trace_id": trace.id,
+                "langfuse_session_id": SESSION_ID,
+                "run_name": RUN_NAME,
+            }
+
+            # Actual Dialectic call – we piggy-back the Langfuse IDs via `extra_body`
+            raw_answer = honcho.apps.users.sessions.chat(
+                app_id=app_id,
+                user_id=user_id,
+                session_id=session_id,
+                queries=prompt,
+                stream=False,
+                extra_body=meta_payload,
+            ).content
             
             # Map letter to text for category-5
             if category == 5 and answer_key is not None:
@@ -373,6 +473,8 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
             
             # Store the answer
             out_data['qa'][idx][prediction_key] = answer.strip()
+            # Store trace reference for later scoring / updates
+            idx_to_trace[idx] = trace
             questions_processed += 1
             
             # Optionally track context (sessions used)
@@ -418,6 +520,15 @@ def get_honcho_answers(in_data, out_data, prediction_key, args):
     else:
         print(f"[HONCHO DEBUG] SUCCESS: All {len(out_data['qa'])} questions now have 'answer' field")
     
+    # ------------------------------------------------------------------
+    # After rule-based / LLM scoring happens later in evaluate_qa.py, we will be
+    # called again (same process) – but we can already return a helper so that
+    # the outer script can attach scores to Langfuse traces.  We stash the
+    # mapping for the caller via out_data.
+    # ------------------------------------------------------------------
+
+    out_data["_idx_to_trace"] = idx_to_trace
+
     return out_data 
 
 # ------------------------------------------------------------------
